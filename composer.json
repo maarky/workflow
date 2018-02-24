@@ -1,0 +1,26 @@
+{
+  "name": "maarky/workflow",
+  "description": "Monad for workflows",
+  "keywords": ["php","monad", "workflow"],
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Mark Wright",
+      "email": "sparkymeister@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "maarky/singlecontainer": "1.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "6.*"
+  },
+  "autoload": {
+    "psr-4": { "maarky\\": "src/maarky/" }
+  },
+  "autoload-dev": {
+    "psr-4": { "maarky\\Test\\": "test/maarky/" }
+  }
+}
