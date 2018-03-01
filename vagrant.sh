@@ -21,3 +21,5 @@ error_reporting=E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
 EOF
 
 ln -s /vagrant /home/vagrant
+chgrp vagrant /home/ubuntu
+chmod 775 /home/ubuntu
