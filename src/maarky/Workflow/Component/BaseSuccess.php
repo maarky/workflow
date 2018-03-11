@@ -82,10 +82,12 @@ trait BaseSuccess
      */
     public function filter(callable $filter): SingleContainer
     {
-        if($filter($this->get())) {
+        $result = $filter($this->get());
+        if(true === $result) {
             return $this;
         }
-        return static::new();
+        $result = static::isErrorResult($result) ? $result : null;
+        return static::new($result);
     }
 
     /**
@@ -97,7 +99,6 @@ trait BaseSuccess
         if(!$filter($this->get())) {
             return $this;
         }
-        $class = static::getNamespaceResult('NoResult');
         return static::new();
     }
 
