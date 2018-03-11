@@ -21,7 +21,7 @@ abstract class Workflow implements SingleContainer
         return new $class($value);
     }
 
-    public static function getNamespaceResult(string $result)
+    protected static function getNamespaceResult(string $result)
     {
         $namespaeParts = explode('\\', static::class);
         array_pop($namespaeParts);
