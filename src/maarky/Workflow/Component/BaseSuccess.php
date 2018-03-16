@@ -108,10 +108,15 @@ trait BaseSuccess
      */
     public function map(callable $map): SingleContainer
     {
-        $result = $map($this->get());
-        if(!static::isValid($result)) {
-            return Workflow::new($result);
+        try {
+            $result = $map($this->get());
+            if(!static::isValid($result)) {
+                return Workflow::new($result);
+            }
+        } catch (\Throwable $t) {
+            $result = $t;
         }
+
         return static::new($result);
     }
 
