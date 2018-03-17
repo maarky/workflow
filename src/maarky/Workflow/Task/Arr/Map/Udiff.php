@@ -5,9 +5,9 @@ namespace maarky\Workflow\Task\Arr\Map;
 
 trait Udiff
 {
-    public function udiff($callback, ...$arrays)
+    public function udiff(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_udiff($array, ...$arrays);
@@ -16,9 +16,9 @@ trait Udiff
         };
     }
 
-    public function udiffAssoc($callback, ...$arrays)
+    public function udiffAssoc(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_udiff_assoc($array, ...$arrays);
@@ -27,9 +27,9 @@ trait Udiff
         };
     }
 
-    public function udiffUassoc($valCompare, $keyCompare, ...$arrays)
+    public function udiffUassoc($valCompare, $keyCompare, array ...$arrays)
     {
-        return function ($array) use($valCompare, $keyCompare, $arrays) {
+        return function (array $array) use($valCompare, $keyCompare, $arrays) {
             $arrays[] = $valCompare;
             $arrays[] = $keyCompare;
             $callback = function () use($array, $arrays) {

@@ -39,13 +39,6 @@ class IntersectTest extends TestCase
         return [
             ['intersect assoc: default usage', E_ALL, array_intersect_assoc($array1, $array2), function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectAssoc($array2))->get(); }],
             ['intersect assoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectAssoc($array2))->isError(); }],
-            ['intersect assoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectAssoc(1))->isError(); }],
-            ['intersect assoc: not array 1 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectAssoc($array2))->isError(); }],
-            ['intersect assoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasksWarning->intersectAssoc($array2))->isError(); }],
-            ['intersect assoc: not array 2 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectAssoc(1))->isError(); }],
-            ['intersect assoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasksWarning->intersectAssoc(1))->isError(); }],
-            ['intersect assoc: not array 1 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectAssoc($array2))->isEmpty(); }],
-            ['intersect assoc: not array 2 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectAssoc(1))->isEmpty(); }]
         ];
     }
 
@@ -56,13 +49,6 @@ class IntersectTest extends TestCase
         return [
             ['intersect key: default usage', E_ALL, array_intersect_key($array1, $array2), function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectKey($array2))->get(); }],
             ['intersect key: not array 1 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectKey($array2))->isError(); }],
-            ['intersect key: not array 2 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectKey(1))->isError(); }],
-            ['intersect key: not array 1 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectKey($array2))->isError(); }],
-            ['intersect key: not array 1 - no error - throw', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasksWarning->intersectKey($array2))->isError(); }],
-            ['intersect key: not array 2 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectKey(1))->isError(); }],
-            ['intersect key: not array 2 - no error - throw', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasksWarning->intersectKey(1))->isError(); }],
-            ['intersect key: not array 1 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersectKey($array2))->isEmpty(); }],
-            ['intersect key: not array 2 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersectKey(1))->isEmpty(); }]
         ];
     }
 
@@ -76,13 +62,6 @@ class IntersectTest extends TestCase
         return [
             ['intersect uassoc: default usage', E_ALL, array_intersect_uassoc($array1, $array2, $keyCompare), function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUassoc($keyCompare, $array2))->get(); }],
             ['intersect uassoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUassoc($keyCompare, $array2))->isError(); }],
-            ['intersect uassoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUassoc($keyCompare, 1))->isError(); }],
-            ['intersect uassoc: not array 1 - no error', 0, false, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUassoc($keyCompare, $array2))->isError(); }],
-            ['intersect uassoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasksWarning->intersectUassoc($keyCompare, $array2))->isError(); }],
-            ['intersect uassoc: not array 2 - no error', 0, false, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUassoc($keyCompare, 1))->isError(); }],
-            ['intersect uassoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->intersectUassoc($keyCompare, 1))->isError(); }],
-            ['intersect uassoc: not array 1 - empty', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUassoc($keyCompare, $array2))->isEmpty(); }],
-            ['intersect uassoc: not array 2 - empty', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUassoc($keyCompare, 1))->isEmpty(); }]
         ];
     }
 
@@ -96,13 +75,6 @@ class IntersectTest extends TestCase
         return [
             ['intersect ukey: default usage', E_ALL, array_intersect_ukey($array1, $array2, $keyCompare), function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUkey($keyCompare, $array2))->get(); }],
             ['intersect ukey: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUkey($keyCompare, $array2))->isError(); }],
-            ['intersect ukey: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUkey($keyCompare, 1))->isError(); }],
-            ['intersect ukey: not array 1 - no error', 0, false, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUkey($keyCompare, $array2))->isError(); }],
-            ['intersect ukey: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasksWarning->intersectUkey($keyCompare, $array2))->isError(); }],
-            ['intersect ukey: not array 2 - no error', 0, false, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUkey($keyCompare, 1))->isError(); }],
-            ['intersect ukey: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->intersectUkey($keyCompare, 1))->isError(); }],
-            ['intersect ukey: not array 1 - empty', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new(1)->map($this->tasks->intersectUkey($keyCompare, $array2))->isEmpty(); }],
-            ['intersect ukey: not array 2 - empty', 0, true, function() use ($array1, $array2, $keyCompare) { return Workflow::new($array1)->map($this->tasks->intersectUkey($keyCompare, 1))->isEmpty(); }]
         ];
     }
 
@@ -113,13 +85,6 @@ class IntersectTest extends TestCase
         return [
             ['intersect: default usage', E_ALL, array_intersect($array1, $array2), function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersect($array2))->get(); }],
             ['intersect: not array 1 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersect($array2))->isError(); }],
-            ['intersect: not array 2 - error', E_ALL, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersect(1))->isError(); }],
-            ['intersect: not array 1 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersect($array2))->isError(); }],
-            ['intersect: not array 1 - no error throw', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasksWarning->intersect($array2))->isError(); }],
-            ['intersect: not array 2 - no error', 0, false, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersect(1))->isError(); }],
-            ['intersect: not array 2 - no error - throw', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasksWarning->intersect(1))->isError(); }],
-            ['intersect: not array 1 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new(1)->map($this->tasks->intersect($array2))->isEmpty(); }],
-            ['intersect: not array 2 - empty', 0, true, function() use ($array1, $array2) { return Workflow::new($array1)->map($this->tasks->intersect(1))->isEmpty(); }]
         ];
     }
 

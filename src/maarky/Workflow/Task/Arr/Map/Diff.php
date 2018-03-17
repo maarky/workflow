@@ -5,9 +5,9 @@ namespace maarky\Workflow\Task\Arr\Map;
 
 trait Diff
 {
-    public function diff(...$arrays)
+    public function diff(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_diff($array, ...$arrays);
             };
@@ -15,9 +15,9 @@ trait Diff
         };
     }
 
-    public function diffAssoc(...$arrays)
+    public function diffAssoc(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_diff_assoc($array, ...$arrays);
             };
@@ -25,9 +25,9 @@ trait Diff
         };
     }
 
-    public function diffKey(...$arrays)
+    public function diffKey(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_diff_key($array, ...$arrays);
             };
@@ -35,9 +35,9 @@ trait Diff
         };
     }
 
-    public function diffUassoc($callback, ...$arrays)
+    public function diffUassoc(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_diff_uassoc($array, ...$arrays);
@@ -46,9 +46,9 @@ trait Diff
         };
     }
 
-    public function diffUkey($callback, ...$arrays)
+    public function diffUkey(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_diff_ukey($array, ...$arrays);

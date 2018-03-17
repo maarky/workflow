@@ -5,9 +5,9 @@ namespace maarky\Workflow\Task\Arr\Map;
 
 trait Intersect
 {
-    public function intersect(...$arrays)
+    public function intersect(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_intersect($array, ...$arrays);
             };
@@ -15,9 +15,9 @@ trait Intersect
         };
     }
 
-    public function intersectAssoc(...$arrays)
+    public function intersectAssoc(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_intersect_assoc($array, ...$arrays);
             };
@@ -25,9 +25,9 @@ trait Intersect
         };
     }
 
-    public function intersectKey(...$arrays)
+    public function intersectKey(array ...$arrays)
     {
-        return function ($array) use($arrays) {
+        return function (array $array) use($arrays) {
             $callback = function () use($array, $arrays) {
                 return array_intersect_key($array, ...$arrays);
             };
@@ -35,9 +35,9 @@ trait Intersect
         };
     }
 
-    public function intersectUassoc($callback, ...$arrays)
+    public function intersectUassoc(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_intersect_uassoc($array, ...$arrays);
@@ -46,9 +46,9 @@ trait Intersect
         };
     }
 
-    public function intersectUkey($callback, ...$arrays)
+    public function intersectUkey(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_intersect_ukey($array, ...$arrays);

@@ -40,16 +40,6 @@ class UintersectTest extends TestCase
         return [
             ['uintersect assoc: default usage', E_ALL, array_uintersect_assoc($array1, $array2, $callback), function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, $array2))->get(); }],
             ['uintersect assoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->uintersectAssoc($callback, $array2))->isError(); }],
-            ['uintersect assoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, 1))->isError(); }],
-            ['uintersect assoc: not callable - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc(1, 1))->isError(); }],
-            ['uintersect assoc: not array 1 - no error', 0, false, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->uintersectAssoc($callback, $array2))->isError(); }],
-            ['uintersect assoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasksWarning->uintersectAssoc($callback, $array2))->isError(); }],
-            ['uintersect assoc: not array 2 - no error', 0, false, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, 1))->isError(); }],
-            ['uintersect assoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasksWarning->uintersectAssoc($callback, 1))->isError(); }],
-            ['uintersect assoc: not callable - no error', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc(1, $array2))->isError(); }],
-            ['uintersect assoc: not callable - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasksWarning->uintersectAssoc(1, $array2))->isError(); }],
-            ['uintersect assoc: not array 1 - empty', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->uintersectAssoc($callback, $array2))->isEmpty(); }],
-            ['uintersect assoc: not array 2 - empty', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, 1))->isEmpty(); }]
         ];
     }
 
@@ -62,19 +52,6 @@ class UintersectTest extends TestCase
         return [
             ['uintersect uassoc: default usage', E_ALL, array_uintersect_uassoc($array1, $array2, $valCompare, $keyCompare), function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->get(); }],
             ['uintersect uassoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['uintersect uassoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not callback 1 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc(1, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not callback 2 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, 1, 1))->isError(); }],
-            ['uintersect uassoc: not array 1 - no error', 0, false, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['uintersect uassoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasksWarning->uintersectUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['uintersect uassoc: not callback 1 - no error', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc(1, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not callback 2 - no error', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, 1, 1))->isError(); }],
-            ['uintersect uassoc: not callback 1 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->uintersectUassoc(1, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not callback 2 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->uintersectUassoc($valCompare, 1, 1))->isError(); }],
-            ['uintersect uassoc: not array 2 - no error', 0, false, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->uintersectUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['uintersect uassoc: not array 1 - empty', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->isEmpty(); }],
-            ['uintersect uassoc: not array 2 - empty', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, 1))->isEmpty(); }]
         ];
     }
 
@@ -86,16 +63,6 @@ class UintersectTest extends TestCase
         return [
             ['uintersect: default usage', E_ALL, array_uintersect($array1, $array2, $compare), function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect($compare, $array2))->get(); }],
             ['uintersect: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->uintersect($compare, $array2))->isError(); }],
-            ['uintersect: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect($compare, 1))->isError(); }],
-            ['uintersect: not callable - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect(1, $array2))->isError(); }],
-            ['uintersect: not array 1 - no error', 0, false, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->uintersect($compare, $array2))->isError(); }],
-            ['uintersect: not array 1 - no error throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasksWarning->uintersect($compare, $array2))->isError(); }],
-            ['uintersect: not array 2 - no error', 0, false, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect($compare, 1))->isError(); }],
-            ['uintersect: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasksWarning->uintersect($compare, 1))->isError(); }],
-            ['uintersect: not callable - no error', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect(1, $array2))->isError(); }],
-            ['uintersect: not callable - no error - throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasksWarning->uintersect(1, $array2))->isError(); }],
-            ['uintersect: not array 1 - empty', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->uintersect($compare, $array2))->isEmpty(); }],
-            ['uintersect: not array 2 - empty', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->uintersect($compare, 1))->isEmpty(); }]
         ];
     }
 

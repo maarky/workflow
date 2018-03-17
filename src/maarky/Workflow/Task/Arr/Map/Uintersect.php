@@ -5,9 +5,9 @@ namespace maarky\Workflow\Task\Arr\Map;
 
 trait Uintersect
 {
-    public function uintersect($callback, ...$arrays)
+    public function uintersect(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_uintersect($array, ...$arrays);
@@ -16,9 +16,9 @@ trait Uintersect
         };
     }
 
-    public function uintersectAssoc($callback, ...$arrays)
+    public function uintersectAssoc(callable $callback, array ...$arrays)
     {
-        return function ($array) use($callback, $arrays) {
+        return function (array $array) use($callback, $arrays) {
             $arrays[] = $callback;
             $callback = function () use($array, $arrays) {
                 return array_uintersect_assoc($array, ...$arrays);
@@ -27,9 +27,9 @@ trait Uintersect
         };
     }
 
-    public function uintersectUassoc($valCompare, $keyCompare, ...$arrays)
+    public function uintersectUassoc($valCompare, $keyCompare, array ...$arrays)
     {
-        return function ($array) use($valCompare, $keyCompare, $arrays) {
+        return function (array $array) use($valCompare, $keyCompare, $arrays) {
             $arrays[] = $valCompare;
             $arrays[] = $keyCompare;
             $callback = function () use($array, $arrays) {

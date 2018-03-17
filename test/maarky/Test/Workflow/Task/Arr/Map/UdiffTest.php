@@ -40,16 +40,6 @@ class UdiffTest extends TestCase
         return [
             ['udiff assoc: default usage', E_ALL, array_udiff_assoc($array1, $array2, $callback), function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, $array2))->get(); }],
             ['udiff assoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->udiffAssoc($callback, $array2))->isError(); }],
-            ['udiff assoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, 1))->isError(); }],
-            ['udiff assoc: not callable - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc(1, 1))->isError(); }],
-            ['udiff assoc: not array 1 - no error', 0, false, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->udiffAssoc($callback, $array2))->isError(); }],
-            ['udiff assoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasksWarning->udiffAssoc($callback, $array2))->isError(); }],
-            ['udiff assoc: not array 2 - no error', 0, false, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, 1))->isError(); }],
-            ['udiff assoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasksWarning->udiffAssoc($callback, 1))->isError(); }],
-            ['udiff assoc: not callable - no error', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc(1, $array2))->isError(); }],
-            ['udiff assoc: not callable - no error - throw', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasksWarning->udiffAssoc(1, $array2))->isError(); }],
-            ['udiff assoc: not array 1 - empty', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->udiffAssoc($callback, $array2))->isEmpty(); }],
-            ['udiff assoc: not array 2 - empty', 0, true, function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, 1))->isEmpty(); }]
         ];
     }
 
@@ -62,19 +52,6 @@ class UdiffTest extends TestCase
         return [
             ['udiff uassoc: default usage', E_ALL, array_udiff_uassoc($array1, $array2, $valCompare, $keyCompare), function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->get(); }],
             ['udiff uassoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['udiff uassoc: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not callback 1 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc(1, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not callback 2 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, 1, 1))->isError(); }],
-            ['udiff uassoc: not array 1 - no error', 0, false, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['udiff uassoc: not array 1 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasksWarning->udiffUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-            ['udiff uassoc: not callback 1 - no error', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc(1, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not callback 2 - no error', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, 1, 1))->isError(); }],
-            ['udiff uassoc: not callback 1 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->udiffUassoc(1, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not callback 2 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->udiffUassoc($valCompare, 1, 1))->isError(); }],
-            ['udiff uassoc: not array 2 - no error', 0, false, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasksWarning->udiffUassoc($valCompare, $keyCompare, 1))->isError(); }],
-            ['udiff uassoc: not array 1 - empty', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isEmpty(); }],
-            ['udiff uassoc: not array 2 - empty', 0, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, 1))->isEmpty(); }]
         ];
     }
 
@@ -96,16 +73,6 @@ class UdiffTest extends TestCase
         return [
             ['udiff: default usage', E_ALL, array_udiff($array1, $array2, $compare), function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff($compare, $array2))->get(); }],
             ['udiff: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->udiff($compare, $array2))->isError(); }],
-            ['udiff: not array 2 - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff($compare, 1))->isError(); }],
-            ['udiff: not callable - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff(1, $array2))->isError(); }],
-            ['udiff: not array 1 - no error', 0, false, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->udiff($compare, $array2))->isError(); }],
-            ['udiff: not array 1 - no error throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasksWarning->udiff($compare, $array2))->isError(); }],
-            ['udiff: not array 2 - no error', 0, false, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff($compare, 1))->isError(); }],
-            ['udiff: not array 2 - no error - throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasksWarning->udiff($compare, 1))->isError(); }],
-            ['udiff: not callable - no error', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff(1, $array2))->isError(); }],
-            ['udiff: not callable - no error - throw', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasksWarning->udiff(1, $array2))->isError(); }],
-            ['udiff: not array 1 - empty', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->udiff($compare, $array2))->isEmpty(); }],
-            ['udiff: not array 2 - empty', 0, true, function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff($compare, 1))->isEmpty(); }]
         ];
     }
 
