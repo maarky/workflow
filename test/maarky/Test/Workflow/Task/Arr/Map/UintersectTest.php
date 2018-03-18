@@ -10,26 +10,13 @@ use maarky\Workflow\Task\Utility;
 
 class UintersectTest extends TestCase
 {
-    protected $errorReporting;
     protected $tasks;
-    protected $tasksWarning;
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function setUp()
     {
-        $this->errorReporting = error_reporting();
         $this->tasks = new class {
             use Uintersect, Utility;
         };
-        $this->tasksWarning = new class {
-            use Uintersect, Utility;
-            protected $throwWarnings = true;
-        };
-        parent::__construct($name , $data, $dataName);
-    }
-
-    public function tearDown()
-    {
-        error_reporting($this->errorReporting);
     }
 
     public function testAssoc()
