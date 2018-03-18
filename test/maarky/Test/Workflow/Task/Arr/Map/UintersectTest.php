@@ -32,15 +32,22 @@ class UintersectTest extends TestCase
         error_reporting($this->errorReporting);
     }
 
-    public function assocData()
+    public function testAssoc()
     {
         $array1 = ["a" => "green", "b" => "brown", "c" => "blue", "red"];
         $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
         $callback = 'strcasecmp';
-        return [
-            ['uintersect assoc: default usage', E_ALL, array_uintersect_assoc($array1, $array2, $callback), function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, $array2))->get(); }],
-            ['uintersect assoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->uintersectAssoc($callback, $array2))->isError(); }],
-        ];
+        $expected = array_uintersect_assoc($array1, $array2, $callback);
+        $actual = Workflow::new($array1)->map($this->tasks->uintersectAssoc($callback, $array2))->get();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testAssoc_notArray()
+    {
+        $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
+        $callback = 'strcasecmp';
+        $actual = Workflow::new(1)->map($this->tasks->uintersectAssoc($callback, $array2))->isError();
+        $this->assertTrue($actual);
     }
 
     public function uassocData()
@@ -55,6 +62,26 @@ class UintersectTest extends TestCase
         ];
     }
 
+    public function testUassoc()
+    {
+        $array1 = ["a" => "green", "b" => "brown", "c" => "blue", "red"];
+        $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
+        $valCompare = 'strcasecmp';
+        $keyCompare = 'strcasecmp';
+        $expected = array_uintersect_uassoc($array1, $array2, $valCompare, $keyCompare);
+        $actual = Workflow::new($array1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->get();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testUassoc_notArray()
+    {
+        $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
+        $valCompare = 'strcasecmp';
+        $keyCompare = 'strcasecmp';
+        $actual = Workflow::new(1)->map($this->tasks->uintersectUassoc($valCompare, $keyCompare, $array2))->isError();
+        $this->assertTrue($actual);
+    }
+
     public function uintersectData()
     {
         $array1 = ["a" => "green", "b" => "brown", "c" => "blue", "red"];
@@ -66,14 +93,21 @@ class UintersectTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider assocData
-     * @dataProvider uassocData
-     * @dataProvider uintersectData
-     */
-    public function testUintersect($message, $errorReporting, $expected, $actual)
+    public function testUintersect()
     {
-        error_reporting($errorReporting);
-        $this->assertSame($expected, $actual(), $message);
+        $array1 = ["a" => "green", "b" => "brown", "c" => "blue", "red"];
+        $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
+        $compare = 'strcasecmp';
+        $expected = array_uintersect($array1, $array2, $compare);
+        $actual = Workflow::new($array1)->map($this->tasks->uintersect($compare, $array2))->get();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testUintersect_notArray()
+    {
+        $array2 = ["a" => "GREEN", "B" => "brown", "yellow", "red"];
+        $compare = 'strcasecmp';
+        $actual = Workflow::new(1)->map($this->tasks->uintersect($compare, $array2))->isError();
+        $this->assertTrue($actual);
     }
 }

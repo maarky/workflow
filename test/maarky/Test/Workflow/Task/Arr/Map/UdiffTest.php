@@ -10,52 +10,54 @@ use maarky\Workflow\Task\Utility;
 
 class UdiffTest extends TestCase
 {
-    protected $errorReporting;
     protected $tasks;
-    protected $tasksWarning;
 
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function setUp()
     {
-        $this->errorReporting = error_reporting();
         $this->tasks = new class {
             use Udiff, Utility;
         };
-        $this->tasksWarning = new class {
-            use Udiff, Utility;
-            protected $throwWarnings = true;
-        };
-        parent::__construct($name , $data, $dataName);
     }
 
-    public function tearDown()
-    {
-        error_reporting($this->errorReporting);
-    }
-
-    public function assocData()
+    public function testAssoc()
     {
         $array1 = ["0.1" => new cr(9), "0.5" => new cr(12), 0 => new cr(23), 1=> new cr(4), 2 => new cr(-15)];
         $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
         $callback = [cr::class, "comp_func_cr"];
-        return [
-            ['udiff assoc: default usage', E_ALL, array_udiff_assoc($array1, $array2, $callback), function() use ($array1, $array2, $callback) { return Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, $array2))->get(); }],
-            ['udiff assoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $callback) { return Workflow::new(1)->map($this->tasks->udiffAssoc($callback, $array2))->isError(); }],
-        ];
+        $expected = array_udiff_assoc($array1, $array2, $callback);
+        $actual = Workflow::new($array1)->map($this->tasks->udiffAssoc($callback, $array2))->get();
+        $this->assertSame($expected, $actual);
     }
 
-    public function uassocData()
+    public function testAssoc_notArray()
+    {
+        $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
+        $callback = [cr::class, "comp_func_cr"];
+        $actual = Workflow::new(1)->map($this->tasks->udiffAssoc($callback, $array2))->isError();
+        $this->assertTrue($actual);
+    }
+
+    public function testUassoc()
     {
         $array1 = ["0.1" => new cr(9), "0.5" => new cr(12), 0 => new cr(23), 1=> new cr(4), 2 => new cr(-15)];
         $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
         $valCompare = [cr::class, "comp_func_cr"];
         $keyCompare = [cr::class, "comp_func_key"];
-        return [
-            ['udiff uassoc: default usage', E_ALL, array_udiff_uassoc($array1, $array2, $valCompare, $keyCompare), function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->get(); }],
-            ['udiff uassoc: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $valCompare, $keyCompare) { return Workflow::new(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isError(); }],
-        ];
+        $expected = array_udiff_uassoc($array1, $array2, $valCompare, $keyCompare);
+        $actual = Workflow::new($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->get();
+        $this->assertSame($expected, $actual);
     }
 
-    public function udiffData()
+    public function testUassoc_notArray()
+    {
+        $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
+        $valCompare = [cr::class, "comp_func_cr"];
+        $keyCompare = [cr::class, "comp_func_key"];
+        $actual = Workflow::new(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isError();
+        $this->assertTrue($actual);
+    }
+
+    public function testUdiff()
     {
         $array1 = [new \stdclass, new \stdclass, new \stdclass, new \stdclass];
         $array2 = [new \stdclass, new \stdclass];
@@ -70,21 +72,19 @@ class UdiffTest extends TestCase
             $areaB = $b->width * $b->height;
             return $areaA <=> $areaB;
         };
-        return [
-            ['udiff: default usage', E_ALL, array_udiff($array1, $array2, $compare), function() use ($array1, $array2, $compare) { return Workflow::new($array1)->map($this->tasks->udiff($compare, $array2))->get(); }],
-            ['udiff: not array 1 - error', E_ALL, true, function() use ($array1, $array2, $compare) { return Workflow::new(1)->map($this->tasks->udiff($compare, $array2))->isError(); }],
-        ];
+        $expected = array_udiff($array1, $array2, $compare);
+        $actual = Workflow::new($array1)->map($this->tasks->udiff($compare, $array2))->get();
+        $this->assertSame($expected, $actual);
+        return [$compare, $array2];
     }
 
     /**
-     * @dataProvider assocData
-     * @dataProvider uassocData
-     * @dataProvider udiffData
+     * @depends testUdiff
      */
-    public function testUdiff($message, $errorReporting, $expected, $actual)
+    public function testUdiff_notArray($data)
     {
-        error_reporting($errorReporting);
-        $this->assertSame($expected, $actual(), $message);
+        $actual = Workflow::new(1)->map($this->tasks->udiff($data[0], $data[1]))->isError();
+        $this->assertTrue($actual);
     }
 }
 
