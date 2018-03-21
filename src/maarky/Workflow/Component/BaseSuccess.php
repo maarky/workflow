@@ -82,12 +82,10 @@ trait BaseSuccess
      */
     public function filter(callable $filter): SingleContainer
     {
-        $result = $filter($this->get());
-        if(true === $result) {
+        if(true === $filter($this->get())) {
             return $this;
         }
-        $result = static::isErrorResult($result) ? $result : null;
-        return static::new($result);
+        return static::new();
     }
 
     /**
@@ -96,7 +94,7 @@ trait BaseSuccess
      */
     public function filterNot(callable $filter): SingleContainer
     {
-        if(!$filter($this->get())) {
+        if(false === $filter($this->get())) {
             return $this;
         }
         return static::new();
