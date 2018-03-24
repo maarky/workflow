@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace maarky\Test\Workflow\Task\Arr\Map;
 
 use maarky\Workflow\Task\Utility;
-use maarky\Workflow\Task\Arr\Map\Misc;
+use maarky\Workflow\Task\Arr\Map;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
 
-class MiscTest extends TestCase
+class MapTest extends TestCase
 {
     protected $errorReporting;
     protected $tasks;
@@ -17,7 +17,7 @@ class MiscTest extends TestCase
     {
         $this->errorReporting = error_reporting(E_ALL);
         $this->tasks = new class {
-            use Misc, Utility;
+            use Map, Utility;
         };
     }
 

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace maarky\Workflow\Task\Arr\Map;
+namespace maarky\Workflow\Task\Arr;
 
-trait Misc
+trait Map
 {
     /**
      * @param int $case CASE_LOWER or CASE_UPPER
