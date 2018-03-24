@@ -47,7 +47,7 @@ trait Misc
     {
         return function (array $array) {
             $callback = function() use($array) {
-                return array_count_values ($array);
+                return array_count_values($array);
             };
             return $this->doArrayCallback($callback);
         };
@@ -182,6 +182,44 @@ trait Misc
                 return array_slice($array, 0, -1, true);
             };
             return $this->doAnyCallback($callback);
+        };
+    }
+
+    public function push($value)
+    {
+        return function (array $array) use($value) {
+            $callback = function() use($array, $value) {
+                array_push($array, $value);
+                return $array;
+            };
+            return $this->doArrayCallback($callback);
+        };
+    }
+
+    public function rand($num = 1)
+    {
+        return function (array $array) use($num) {
+            $callback = function() use($array, $num) {
+                return (array) array_rand($array, $num);
+            };
+            $result = $this->doArrayCallback($callback);
+            if(1 == $num && count($result) == $num) {
+                return $result[0];
+            }
+            return $result;
+        };
+    }
+
+    public function randValues($num = 1)
+    {
+        return function (array $array) use($num) {
+            $callback = function() use($array, $num) {
+                return (array) array_rand($array, $num);
+            };
+            $result = $this->doArrayCallback($callback);
+            $combiled = array_combine($result, array_pad([], $num, 1));
+            $intersection = array_intersect_key($array, $combiled);
+            return $intersection;
         };
     }
 }
