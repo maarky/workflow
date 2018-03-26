@@ -222,4 +222,24 @@ trait Map
             return $intersection;
         };
     }
+
+    public function replace(...$arrays)
+    {
+        return function (array $array) use($arrays) {
+            $callback = function() use($array, $arrays) {
+                return array_replace($array, ...$arrays);
+            };
+            return $this->doArrayCallback($callback);
+        };
+    }
+
+    public function replaceRecursive(...$arrays)
+    {
+        return function (array $array) use($arrays) {
+            $callback = function() use($array, $arrays) {
+                return array_replace_recursive($array, ...$arrays);
+            };
+            return $this->doArrayCallback($callback);
+        };
+    }
 }

@@ -442,4 +442,52 @@ class MapTest extends TestCase
             $this->assertSame($array[$key], $value);
         }
     }
+
+    public function testReplace()
+    {
+        $array1 = array("orange", "banana", "apple", "raspberry");
+        $array2 = array(0 => "pineapple", 4 => "cherry");
+        $array3 = array(0 => "grape");
+        $expected = array_replace($array1, $array2, $array3);
+        $actual = Workflow::new($array1)->map($this->tasks->replace($array2, $array3))->get();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testReplace_notArray()
+    {
+        $array2 = array(0 => "pineapple", 4 => "cherry");
+        $array3 = array(0 => "grape");
+        $actual = Workflow::new(1)->map($this->tasks->replace($array2, $array3))->isError();
+        $this->assertTrue($actual);
+    }
+
+    public function testReplace_notArrayReplacement()
+    {
+        $array1 = array("orange", "banana", "apple", "raspberry");
+        $actual = Workflow::new($array1)->map($this->tasks->replace(1))->isError();
+        $this->assertTrue($actual);
+    }
+
+    public function testReplaceRecursive()
+    {
+        $array1 = array('citrus' => array( "orange") , 'berries' => array("blackberry", "raspberry"), );
+        $array2 = array('citrus' => array('pineapple'), 'berries' => array('blueberry'));
+        $expected = array_replace_recursive($array1, $array2);
+        $actual = Workflow::new($array1)->map($this->tasks->replaceRecursive($array2))->get();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testReplaceRecursive_notArray()
+    {
+        $array2 = array('citrus' => array('pineapple'), 'berries' => array('blueberry'));
+        $actual = Workflow::new(1)->map($this->tasks->replaceRecursive($array2))->isError();
+        $this->assertTrue($actual);
+    }
+
+    public function testReplaceRecursive_notArrayReplacement()
+    {
+        $array1 = array('citrus' => array( "orange") , 'berries' => array("blackberry", "raspberry"), );
+        $actual = Workflow::new($array1)->map($this->tasks->replaceRecursive(1))->isError();
+        $this->assertTrue($actual);
+    }
 }
