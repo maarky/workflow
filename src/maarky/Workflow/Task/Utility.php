@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace maarky\Workflow\Task;
 
+use maarky\Monad\SingleContainer;
+use maarky\Workflow\Workflow;
+
 trait Utility
 {
-    public function bind(callable $callable, array $args = [])
+    public function bind(callable $callable, array $args = []): callable
     {
-        $finalCallable = function($value) use($callable, $args) {
+        return function($value) use($callable, $args) {
             if(array_key_exists('?', $args)) {
                 $args['?'] = $value;
             } else {
@@ -16,28 +19,25 @@ trait Utility
             $finalArgs = array_values($args);
             return $callable(...$finalArgs);
         };
-        return $finalCallable;
     }
 
-    public function bindFlatmap(string $class, callable $callable, array $args = [])
+    public function bindFlatmap(string $class, callable $callable, array $args = []): callable
     {
-        $finalCallable = function($value) use($class, $callable, $args) {
-            $callable = $this->bind($callable, $args);
-            $result = $callable($value);
-            $container = $class::new($result);
-            return $container;
+        return function($value) use($class, $callable, $args): SingleContainer {
+            try {
+                $callable = $this->bind($callable, $args);
+                $result = $callable($value);
+            } catch (\Throwable $t) {
+                $result = $t;
+            }
+            return $class::new($result);
         };
-        return $finalCallable;
     }
 
     protected function doCallback(callable $callback, callable $isDefined)
     {
-        try {
-            $result = $callback();
-            return $isDefined($result) ? $result : null;
-        } catch (\Throwable $t) {
-            return $t;
-        }
+        $result = $callback();
+        return $isDefined($result) ? $result : null;
     }
 
     protected function doArrayCallback(callable $callback)
@@ -73,5 +73,10 @@ trait Utility
     protected function doAnyCallback(callable $callback)
     {
         return $this->doCallback($callback, function () { return true; });
+    }
+
+    protected function doNotnullCallback(callable $callback)
+    {
+        return $this->doCallback($callback, function ($val) { return !is_null($val); });
     }
 }

@@ -82,8 +82,12 @@ trait BaseSuccess
      */
     public function filter(callable $filter): SingleContainer
     {
-        if(true === $filter($this->get())) {
-            return $this;
+        try {
+            if(true === $filter($this->get())) {
+                return $this;
+            }
+        } catch (\Throwable $t) {
+            return static::new($t);
         }
         return static::new();
     }
