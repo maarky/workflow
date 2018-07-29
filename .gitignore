@@ -1,7 +1,6 @@
 /.idea
 /.vagrant
 /Workflow.iml
-/composer.lock
 /vendor
 /sandbox
 .DS_Store

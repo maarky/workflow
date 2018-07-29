@@ -13,10 +13,10 @@
   "require": {
     "php": ">=7.0",
     "maarky/singlecontainer": "1.0.0",
-    "maarky/option": "3.0.0"
+    "maarky/option": "^3.0.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "6.*"
+    "phpunit/phpunit": "^7.2"
   },
   "autoload": {
     "psr-4": { "maarky\\Workflow\\": "src/maarky/Workflow" }
