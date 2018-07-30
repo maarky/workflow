@@ -13,13 +13,14 @@ trait BaseSuccess
 
     protected function __construct($value)
     {
-        $this->value = $value;
+        $value = static::isValid($value) ?: null;
+        $this->value = Option::create($value);
     }
 
     /**
      * @return mixed
      */
-    public function get()
+    public function get(): Option
     {
         return $this->value;
     }
@@ -28,7 +29,7 @@ trait BaseSuccess
      * @param mixed $else
      * @return mixed
      */
-    public function getOrElse($else)
+    public function getOrElse($else): Option
     {
         return $this->get();
     }
@@ -37,7 +38,7 @@ trait BaseSuccess
      * @param callable $call
      * @return mixed
      */
-    public function getOrCall(callable $call)
+    public function getOrCall(callable $call): Option
     {
         return $this->get();
     }

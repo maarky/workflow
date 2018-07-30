@@ -8,24 +8,31 @@ use maarky\Option\Option;
 
 abstract class Workflow implements SingleContainer
 {
-    final public static function new($value = null): Workflow
+    final public static function create($value = null): Workflow
     {
         if(static::isErrorResult($value)) {
             $class = static::getNamespaceResult('Failure');
             return new $class($value);
-        } elseif (!static::isValid($value)) {
-            $class = static::getNamespaceResult('NoResult');
-            return new $class;
         }
         $class = static::getNamespaceResult('Success');
         return new $class($value);
     }
 
+    /**
+     * @param null $value
+     * @return Workflow
+     * @deprecated
+     */
+    final public static function new($value = null): Workflow
+    {
+        return static::create($value);
+    }
+
     protected static function getNamespaceResult(string $result)
     {
-        $namespaeParts = explode('\\', static::class);
-        array_pop($namespaeParts);
-        return implode('\\', $namespaeParts) . '\\' . $result;
+        $namespaceParts = explode('\\', static::class);
+        array_pop($namespaceParts);
+        return implode('\\', $namespaceParts) . '\\' . $result;
     }
 
     public static function isValid($value): bool

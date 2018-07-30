@@ -30,7 +30,7 @@ trait Utility
             } catch (\Throwable $t) {
                 $result = $t;
             }
-            return $class::new($result);
+            return $class::create($result);
         };
     }
 
