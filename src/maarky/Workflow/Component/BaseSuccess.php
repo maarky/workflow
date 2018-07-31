@@ -9,38 +9,41 @@ use maarky\Option\Option;
 
 trait BaseSuccess
 {
+    /**
+     * @var Option 
+     */
     protected $value;
 
     protected function __construct($value)
     {
-        $value = static::isValid($value) ?: null;
+        $value = static::isValid($value) ? $value : null;
         $this->value = Option::create($value);
     }
 
     /**
      * @return mixed
      */
-    public function get(): Option
+    public function get()
     {
-        return $this->value;
+        return $this->value->get();
     }
 
     /**
      * @param mixed $else
      * @return mixed
      */
-    public function getOrElse($else): Option
+    public function getOrElse($else)
     {
-        return $this->get();
+        return $this->value->getOrElse($else);
     }
 
     /**
      * @param callable $call
      * @return mixed
      */
-    public function getOrCall(callable $call): Option
+    public function getOrCall(callable $call)
     {
-        return $this->get();
+        return $this->value->getOrCall($call);
     }
 
     /**
@@ -49,7 +52,7 @@ trait BaseSuccess
      */
     public function orElse(SingleContainer $else): SingleContainer
     {
-        return $this;
+        return $this->isDefined() ? $this : $else;
     }
 
     /**
@@ -58,7 +61,7 @@ trait BaseSuccess
      */
     public function orCall(callable $call): SingleContainer
     {
-        return $this;
+        return $this->isDefined() ? $this : $call;
     }
 
     /**
@@ -66,7 +69,7 @@ trait BaseSuccess
      */
     public function isDefined(): bool
     {
-        return true;
+        return $this->value->isDefined();
     }
 
     /**
@@ -74,7 +77,7 @@ trait BaseSuccess
      */
     public function isEmpty(): bool
     {
-        return false;
+        return $this->value->isEmpty();
     }
 
     /**
@@ -84,13 +87,14 @@ trait BaseSuccess
     public function filter(callable $filter): SingleContainer
     {
         try {
-            if(true === $filter($this->get())) {
+            if($this->value->filter($filter)->isDefined()) {
                 return $this;
             }
+            return static::create(null);
         } catch (\Throwable $t) {
-            return static::new($t);
+            return static::create($t);
         }
-        return static::new();
+
     }
 
     /**
@@ -99,10 +103,14 @@ trait BaseSuccess
      */
     public function filterNot(callable $filter): SingleContainer
     {
-        if(false === $filter($this->get())) {
-            return $this;
+        try {
+            if($this->value->filterNot($filter)->isDefined()) {
+                return $this;
+            }
+            return static::create(null);
+        } catch (\Throwable $t) {
+            return static::create($t);
         }
-        return static::new();
     }
 
     /**
@@ -112,15 +120,13 @@ trait BaseSuccess
     public function map(callable $map): SingleContainer
     {
         try {
-            $result = $map($this->get());
-            if(!static::isValid($result)) {
-                return Workflow::new($result);
-            }
+            $result = $this->value->map($map);
+            $result = $result->isDefined() ? $result->get() : null;
         } catch (\Throwable $t) {
             $result = $t;
         }
 
-        return static::new($result);
+        return static::create($result);
     }
 
     /**
@@ -130,7 +136,10 @@ trait BaseSuccess
      */
     public function flatMap(callable $flatMap): SingleContainer
     {
-        return $flatMap($this->get());
+        if($this->isDefined()) {
+            return $this->value->flatMap($flatMap);
+        }
+        return $this;
     }
 
     /**
@@ -139,7 +148,7 @@ trait BaseSuccess
      */
     public function foreach(callable $each): SingleContainer
     {
-        $each($this->get());
+        $this->value->foreach($each);
         return $this;
     }
 
@@ -149,6 +158,7 @@ trait BaseSuccess
      */
     public function fornothing(callable $nothing): SingleContainer
     {
+        $this->value->fornothing($nothing);
         return $this;
     }
 
@@ -158,7 +168,13 @@ trait BaseSuccess
      */
     public function equals($value): bool
     {
-        return parent::equals($value) && $this->get() === $value->get();
+        if(!parent::equals($value) || $this->isDefined() != $value->isDefined()) {
+            return false;
+        }
+        if($this->isEmpty() && $value->isEmpty()) {
+            return true;
+        }
+        return  $this->value->get() === $value->get();
     }
 
     public function isError(): bool
@@ -168,6 +184,6 @@ trait BaseSuccess
 
     public function getError(): Option
     {
-        return Option::new(null);
+        return Option::create(null);
     }
 }

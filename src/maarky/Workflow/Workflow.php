@@ -51,7 +51,7 @@ abstract class Workflow implements SingleContainer
      */
     public function equals($value): bool
     {
-        return is_object($value) && get_class($this) === get_class($value);
+        return $value instanceof SingleContainer && get_class($this) === get_class($value);
     }
 
     abstract public function isError(): bool;

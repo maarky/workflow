@@ -17,7 +17,7 @@ trait BaseFailure
 
     public function getError(): Option
     {
-        return Option::new($this->error);
+        return Option::create($this->error);
     }
 
     /**

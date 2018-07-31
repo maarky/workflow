@@ -32,7 +32,7 @@ class History implements \Iterator
         } else {
             $workflow = null;
         }
-        return Option::new($workflow);
+        return Option::create($workflow);
     }
 
     public function getLastSuccess(): Option
@@ -46,7 +46,7 @@ class History implements \Iterator
             }
             $this->next();
         }
-        return Option::new($success);
+        return Option::create($success);
     }
 
     /**

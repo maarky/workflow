@@ -15,22 +15,27 @@ class WorkflowTest extends TestCase
 {
     public function testNew_success()
     {
-        $this->assertInstanceOf(Success::class, Workflow::new(1));
+        $this->assertInstanceOf(Success::class, Workflow::create(1));
     }
 
     public function testNew_failure_throwable()
     {
-        $this->assertInstanceOf(Failure::class, Workflow::new(new \Exception()));
+        $this->assertInstanceOf(Failure::class, Workflow::create(new \Exception()));
     }
 
     public function testNew_failure_error()
     {
-        $this->assertInstanceOf(Failure::class, Workflow::new(new class implements Error{}));
+        $this->assertInstanceOf(Failure::class, Workflow::create(new class implements Error{}));
     }
 
     public function testNew_noResult()
     {
-        $this->assertInstanceOf(NoResult::class, Workflow::new(null));
+        $this->assertInstanceOf(Success::class, Workflow::create(null));
+    }
+
+    public function testNew_noResult_isEmpty()
+    {
+        $this->assertTrue(Workflow::create(null)->isEmpty());
     }
 
     public function testIsValid_true()

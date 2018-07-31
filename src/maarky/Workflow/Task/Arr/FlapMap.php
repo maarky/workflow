@@ -16,7 +16,7 @@ trait FlapMap
             $callback = function() use($array) {
                 return array_product($array);
             };
-            return $class::new($this->doNumericCallback($callback));
+            return $class::create($this->doNumericCallback($callback));
         };
     }
 
@@ -27,7 +27,7 @@ trait FlapMap
             $callback = function() use($array, $callable, $initial, $class) {
                 return array_reduce($array, $callable, $initial);
             };
-            return $class::new($this->doNumericCallback($callback));
+            return $class::create($this->doNumericCallback($callback));
         };
     }
 }

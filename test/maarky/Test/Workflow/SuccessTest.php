@@ -35,7 +35,8 @@ class SuccessTest extends TestCase
     {
         $value = 1;
         $workflow = Workflow::new($value);
-        $this->assertSame($value, $workflow->get());
+        $actual = $workflow->get();
+        $this->assertSame($value, $actual);
     }
 
     public function testGetOrElse()
@@ -91,7 +92,7 @@ class SuccessTest extends TestCase
         $filter = function ($input) use ($value) {
             return $input !== $value;
         };
-        $this->assertInstanceOf(NoResult::class, $workflow->filter($filter));
+        $this->assertTrue($workflow->filter($filter)->isEmpty());
     }
 
     public function testFilterNot_false()
@@ -101,7 +102,7 @@ class SuccessTest extends TestCase
         $filter = function ($input) use ($value) {
             return $input === $value;
         };
-        $this->assertInstanceOf(NoResult::class, $workflow->filterNot($filter));
+        $this->assertTrue($workflow->filterNot($filter)->isEmpty());
     }
 
     public function testFilterNot_true()
@@ -111,7 +112,7 @@ class SuccessTest extends TestCase
         $filter = function ($input) use ($value) {
             return $input !== $value;
         };
-        $this->assertInstanceOf(Success::class, $workflow->filterNot($filter));
+        $this->assertTrue($workflow->filterNot($filter)->isDefined());
     }
 
     public function testMap_success()
@@ -153,7 +154,7 @@ class SuccessTest extends TestCase
         $map = function () {
             return null;
         };
-        $this->assertInstanceOf(NoResult::class, $workflow->map($map));
+        $this->assertTrue($workflow->map($map)->isEmpty());
     }
 
     public function testMap_fail_error()
@@ -201,8 +202,9 @@ class SuccessTest extends TestCase
             $track->didUse();
             return Workflow::new($track);
         };
+        $workflow->flatMap($flatMap);
 
-        $this->assertTrue($workflow->flatMap($flatMap)->get()->wasUsed());
+        $this->assertTrue($track->wasUsed());
     }
 
     public function testForeach()
@@ -212,8 +214,8 @@ class SuccessTest extends TestCase
         $foreach = function ($track) {
             $track->didUse();
         };
-
-        $this->assertTrue($workflow->foreach($foreach)->get()->wasUsed());
+        $workflow->foreach($foreach);
+        $this->assertTrue($track->wasUsed());
     }
 
     public function testFornothing()
@@ -223,8 +225,8 @@ class SuccessTest extends TestCase
         $fornothing = function ($track) {
             $track->didUse();
         };
-
-        $this->assertFalse($workflow->fornothing($fornothing)->get()->wasUsed());
+        $workflow->fornothing($fornothing);
+        $this->assertFalse($track->wasUsed());
     }
 
     public function testEquals_true()
