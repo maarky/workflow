@@ -40,19 +40,19 @@ class FailureTest extends TestCase
     public function testGet()
     {
         $this->expectException(\TypeError::class);
-        Workflow::new($this->getError())->get();
+        Workflow::create($this->getError())->get();
     }
 
     public function testGetOrElse()
     {
         $value = 1;
-        $this->assertEquals($value, Workflow::new($this->getError())->getOrElse($value));
+        $this->assertEquals($value, Workflow::create($this->getError())->getOrElse($value));
     }
 
     public function testGetOrElse_invalidElse()
     {
         $this->expectException(\TypeError::class);
-        Workflow::new($this->getError())->getOrElse(null);
+        Workflow::create($this->getError())->getOrElse(null);
     }
 
     public function testGetOrCall()
@@ -61,7 +61,7 @@ class FailureTest extends TestCase
         $call = function () use($value) {
             return $value;
         };
-        $this->assertEquals($value, Workflow::new($this->getError())->getOrCall($call));
+        $this->assertEquals($value, Workflow::create($this->getError())->getOrCall($call));
     }
 
     public function testGetOrCall_invalidElse()
@@ -70,53 +70,53 @@ class FailureTest extends TestCase
         $call = function () {
             return null;
         };
-        Workflow::new($this->getError())->getOrCall($call);
+        Workflow::create($this->getError())->getOrCall($call);
     }
 
     public function testOrElse()
     {
-        $workflow = Workflow::new(1);
-        $this->assertSame($workflow, Workflow::new($this->getError())->orElse($workflow));
+        $workflow = Workflow::create(1);
+        $this->assertSame($workflow, Workflow::create($this->getError())->orElse($workflow));
     }
 
     public function testOrCall()
     {
-        $workflow = Workflow::new(1);
+        $workflow = Workflow::create(1);
         $call = function () use($workflow) {
             return $workflow;
         };
-        $this->assertSame($workflow, Workflow::new($this->getError())->orCall($call));
+        $this->assertSame($workflow, Workflow::create($this->getError())->orCall($call));
     }
 
     public function testOrCall_badType()
     {
         $this->expectException(\TypeError::class);
-        $workflow = Workflow::new(1);
+        $workflow = Workflow::create(1);
         $call = function () use($workflow) {
             return null;
         };
-        Workflow::new($this->getError())->orCall($call);
+        Workflow::create($this->getError())->orCall($call);
     }
 
     public function testIsDefined()
     {
-        $this->assertFalse(Workflow::new($this->getError())->isDefined());
+        $this->assertFalse(Workflow::create($this->getError())->isDefined());
     }
 
     public function testIsEmpty()
     {
-        $this->assertTrue(Workflow::new($this->getError())->isEmpty());
+        $this->assertTrue(Workflow::create($this->getError())->isEmpty());
     }
 
     public function testFilter()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $this->assertSame($workflow, $workflow->filter('strtolower'));
     }
 
     public function testFilter_functionNotCalled()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $tracker = $this->getTracker();
         $workflow->filter($tracker);
         $this->assertFalse($tracker->wasUsed());
@@ -124,13 +124,13 @@ class FailureTest extends TestCase
 
     public function testFilterNot()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $this->assertSame($workflow, $workflow->filterNot('strtolower'));
     }
 
     public function testFilterNot_functionNotCalled()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $tracker = $this->getTracker();
         $workflow->filterNot($tracker);
         $this->assertFalse($tracker->wasUsed());
@@ -138,13 +138,13 @@ class FailureTest extends TestCase
 
     public function testForeach()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $this->assertSame($workflow, $workflow->foreach('strtolower'));
     }
 
     public function testForeach_functionNotCalled()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $tracker = $this->getTracker();
         $workflow->foreach($tracker);
         $this->assertFalse($tracker->wasUsed());
@@ -152,13 +152,13 @@ class FailureTest extends TestCase
 
     public function testFornothing()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $this->assertSame($workflow, $workflow->fornothing($this->getTracker()));
     }
 
     public function testFornothing_functionWasCalled()
     {
-        $workflow = Workflow::new($this->getError());
+        $workflow = Workflow::create($this->getError());
         $tracker = $this->getTracker();
         $workflow->fornothing($tracker);
         $this->assertTrue($tracker->wasUsed());
@@ -166,28 +166,28 @@ class FailureTest extends TestCase
 
     public function testIsError()
     {
-        $this->assertTrue(Workflow::new($this->getError())->isError());
+        $this->assertTrue(Workflow::create($this->getError())->isError());
     }
 
     public function testEquals()
     {
         $error = $this->getError();
-        $workflow1 = Workflow::new($error);
-        $workflow2 = Workflow::new($error);
+        $workflow1 = Workflow::create($error);
+        $workflow2 = Workflow::create($error);
         $this->assertTrue($workflow1->equals($workflow2));
     }
 
     public function testEquals_false_error()
     {
-        $workflow1 = Workflow::new($this->getError());
-        $workflow2 = Workflow::new(null);
+        $workflow1 = Workflow::create($this->getError());
+        $workflow2 = Workflow::create(null);
         $this->assertFalse($workflow1->equals($workflow2));
     }
 
     public function testEquals_false_success()
     {
-        $workflow1 = Workflow::new($this->getError());
-        $workflow2 = Workflow::new(1);
+        $workflow1 = Workflow::create($this->getError());
+        $workflow2 = Workflow::create(1);
         $this->assertFalse($workflow1->equals($workflow2));
     }
 }

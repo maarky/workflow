@@ -22,7 +22,7 @@ class HistoryTest extends TestCase
 
     public function testAdd()
     {
-        $result = $this->history->add(Workflow::new('a'));
+        $result = $this->history->add(Workflow::create('a'));
         $this->assertInstanceOf(History::class, $result);
     }
 
@@ -34,7 +34,7 @@ class HistoryTest extends TestCase
 
     public function testBookmark()
     {
-        $result = $this->history->bookmark('test', Workflow::new('a'));
+        $result = $this->history->bookmark('test', Workflow::create('a'));
         $this->assertInstanceOf(History::class, $result);
     }
 
@@ -46,14 +46,14 @@ class HistoryTest extends TestCase
 
     public function testGet_option()
     {
-        $this->history->bookmark('test', Workflow::new('a'));
+        $this->history->bookmark('test', Workflow::create('a'));
         $result = $this->history->get('test');
         $this->assertInstanceOf(Option::class, $result);
     }
 
     public function testGet_optionHasValue()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->bookmark('test', $workflow);
         $result = $this->history->get('test')->get();
         $this->assertSame($workflow, $result);
@@ -61,7 +61,7 @@ class HistoryTest extends TestCase
 
     public function testGet_optionHasNoValue()
     {
-        $this->history->bookmark('test', Workflow::new('a'));
+        $this->history->bookmark('test', Workflow::create('a'));
         $result = $this->history->get('wrong')->isEmpty();
         $this->assertTrue($result);
     }
@@ -79,7 +79,7 @@ class HistoryTest extends TestCase
 
     public function testKey_nonEmpty()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->add($workflow);
         $this->history->add($workflow);
         $this->history->add($workflow);
@@ -89,7 +89,7 @@ class HistoryTest extends TestCase
 
     public function testNext()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->add($workflow);
         $this->history->add($workflow);
         $this->history->add($workflow);
@@ -100,7 +100,7 @@ class HistoryTest extends TestCase
 
     public function testRewind()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->add($workflow);
         $this->history->add($workflow);
         $this->history->add($workflow);
@@ -113,7 +113,7 @@ class HistoryTest extends TestCase
 
     public function testValid_true()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->add($workflow);
         $this->history->add($workflow);
         $this->history->add($workflow);
@@ -123,22 +123,22 @@ class HistoryTest extends TestCase
 
     public function testValid_false()
     {
-        $this->history->add(Workflow::new('a'));
+        $this->history->add(Workflow::create('a'));
         $this->history->next();
         $this->assertFalse($this->history->valid());
     }
 
     public function testCurrent()
     {
-        $workflow = Workflow::new('a');
+        $workflow = Workflow::create('a');
         $this->history->add($workflow);
         $this->assertSame($workflow, $this->history->current());
     }
 
     public function testCurrent_afterNext()
     {
-        $workflow1 = Workflow::new('a');
-        $workflow2 = Workflow::new('b');
+        $workflow1 = Workflow::create('a');
+        $workflow2 = Workflow::create('b');
         $this->history->add($workflow1);
         $this->history->add($workflow2);
         $this->history->next();
@@ -147,10 +147,10 @@ class HistoryTest extends TestCase
 
     public function testIteratesBackwards()
     {
-        $workflow1 = Workflow::new('a');
-        $workflow2 = Workflow::new('b');
-        $workflow3 = Workflow::new('c');
-        $workflow4 = Workflow::new('d');
+        $workflow1 = Workflow::create('a');
+        $workflow2 = Workflow::create('b');
+        $workflow3 = Workflow::create('c');
+        $workflow4 = Workflow::create('d');
         $this->history->add($workflow1);
         $this->history->add($workflow2);
         $this->history->add($workflow3);
@@ -165,12 +165,12 @@ class HistoryTest extends TestCase
 
     public function testLastSuccess_isOption()
     {
-        $success = Workflow::new('a');
-        $this->history->add(Workflow::new('b'));
-        $this->history->add(Workflow::new(null));
+        $success = Workflow::create('a');
+        $this->history->add(Workflow::create('b'));
+        $this->history->add(Workflow::create(null));
         $this->history->add($success);
-        $this->history->add(Workflow::new(null));
-        $this->history->add(Workflow::new(new \Exception()));
+        $this->history->add(Workflow::create(null));
+        $this->history->add(Workflow::create(new \Exception()));
         $lastSuccess = $this->history->getLastSuccess();
         $this->assertInstanceOf(\maarky\Workflow\Option\Option::class, $lastSuccess);
         return [$success, $lastSuccess];
@@ -195,8 +195,8 @@ class HistoryTest extends TestCase
 
     public function testLastSuccess_isEmpty()
     {
-        $this->history->add(Workflow::new(null));
-        $this->history->add(Workflow::new(new \Exception()));
+        $this->history->add(Workflow::create(null));
+        $this->history->add(Workflow::create(new \Exception()));
         $lastSuccess = $this->history->getLastSuccess()->isEmpty();
         $this->assertTrue($lastSuccess);
     }

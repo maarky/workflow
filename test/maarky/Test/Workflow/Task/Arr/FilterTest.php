@@ -21,13 +21,13 @@ class FilterTest extends TestCase
 
     public function testKeyExists()
     {
-        $workflow = Workflow::new(['a' => 1])->filter($this->tasks->keyExists('a'));
+        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists('a'));
         $this->assertTrue($workflow->isDefined());
     }
 
     public function testKeyExists_notFound_empty()
     {
-        $workflow = Workflow::new(['a' => 1])->filter($this->tasks->keyExists('b'));
+        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists('b'));
         $this->assertTrue($workflow->isEmpty());
         return $workflow;
     }
@@ -42,7 +42,7 @@ class FilterTest extends TestCase
 
     public function testKeyExists_badKey()
     {
-        $workflow = Workflow::new(['a' => 1])->filter($this->tasks->keyExists(new \stdClass()));
+        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists(new \stdClass()));
         $this->assertTrue($workflow->isEmpty());
     }
 }

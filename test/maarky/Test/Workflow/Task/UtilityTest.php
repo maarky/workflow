@@ -25,7 +25,7 @@ class UtilityTest extends TestCase
         $size = 2;
         $preserveKeys = true;
         $expected = array_chunk($array, $size, $preserveKeys);
-        $actual = Workflow::new($array)->map($this->tasks->bind('array_chunk', [$size, $preserveKeys]))->get();
+        $actual = Workflow::create($array)->map($this->tasks->bind('array_chunk', [$size, $preserveKeys]))->get();
         $this->assertSame($expected, $actual);
     }
 
@@ -35,7 +35,7 @@ class UtilityTest extends TestCase
         $glue = '-';
         $expected = implode($glue, $array);
         $class = \maarky\Workflow\Type\String\Workflow::class;
-        $actual = Workflow::new($array)->flatMap($this->tasks->bindFlatmap($class,'implode', [$glue]));
+        $actual = Workflow::create($array)->flatMap($this->tasks->bindFlatmap($class,'implode', [$glue]));
         $this->assertSame($expected, $actual->get());
         return [$class, $actual];
     }
@@ -53,7 +53,7 @@ class UtilityTest extends TestCase
         $array = [1,2,3,4,5,6];
         $glue = '-';
         $class = \maarky\Workflow\Type\Int\Workflow::class;
-        $actual = Workflow::new($array)->flatMap($this->tasks->bindFlatmap($class,'implode', [$glue, '?' => '']));
+        $actual = Workflow::create($array)->flatMap($this->tasks->bindFlatmap($class,'implode', [$glue, '?' => '']));
         $this->assertTrue($actual->isEmpty());
         return $actual;
     }
