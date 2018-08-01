@@ -6,28 +6,21 @@ namespace maarky\Test\Workflow\Task\Arr\Map;
 use maarky\Workflow\Task\Arr\Filter;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
-use maarky\Workflow\Task\Utility;
+use maarky\Workflow\Task\Arr;
 
 class FilterTest extends TestCase
 {
     protected $tasks;
 
-    public function setUp()
-    {
-        $this->tasks = new class {
-            use Filter, Utility;
-        };
-    }
-
     public function testKeyExists()
     {
-        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists('a'));
+        $workflow = Workflow::create(['a' => 1])->filter(Arr\array_key_exists('a'));
         $this->assertTrue($workflow->isDefined());
     }
 
     public function testKeyExists_notFound_empty()
     {
-        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists('b'));
+        $workflow = Workflow::create(['a' => 1])->filter(Arr\array_key_exists('b'));
         $this->assertTrue($workflow->isEmpty());
         return $workflow;
     }
@@ -42,7 +35,16 @@ class FilterTest extends TestCase
 
     public function testKeyExists_badKey()
     {
-        $workflow = Workflow::create(['a' => 1])->filter($this->tasks->keyExists(new \stdClass()));
+        $workflow = Workflow::create(['a' => 1])->filter(Arr\array_key_exists(new \stdClass()));
         $this->assertTrue($workflow->isEmpty());
+        return $workflow;
+    }
+
+    /**
+     * @depends testKeyExists_badKey
+     */
+    public function testKeyExists_badKey_isError(Workflow $workflow)
+    {
+        $this->assertTrue($workflow->isError());
     }
 }
