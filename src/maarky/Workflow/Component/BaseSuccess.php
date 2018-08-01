@@ -61,7 +61,7 @@ trait BaseSuccess
      */
     public function orCall(callable $call): SingleContainer
     {
-        return $this->isDefined() ? $this : $call;
+        return $this->isDefined() ? $this : $call();
     }
 
     /**
