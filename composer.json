@@ -19,7 +19,10 @@
     "phpunit/phpunit": "^7.2"
   },
   "autoload": {
-    "psr-4": { "maarky\\Workflow\\": "src/maarky/Workflow" }
+    "psr-4": { "maarky\\Workflow\\": "src/maarky/Workflow" },
+    "files": [
+      "src/maarky/Workflow/Task/Arr/Filter.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": { "maarky\\Test\\": "test/maarky/" }
