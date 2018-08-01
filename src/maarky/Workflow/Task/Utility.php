@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace maarky\Workflow\Task;
 
 use maarky\Monad\SingleContainer;
-use maarky\Workflow\Workflow;
 
 trait Utility
 {
@@ -16,8 +15,7 @@ trait Utility
             } else {
                 array_unshift($args, $value);
             }
-            $finalArgs = array_values($args);
-            return $callable(...$finalArgs);
+            return call_user_func_array($callable, $args);
         };
     }
 
