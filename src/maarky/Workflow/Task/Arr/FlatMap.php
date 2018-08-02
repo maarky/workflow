@@ -17,7 +17,25 @@ function array_product(string $class = null): callable
 
 }
 
-function array_reduce(callable $callable, $initial = null, string $class = null)
+function array_rand(string $class = null): callable
+{
+    $class = $class ?: Workflow::class;
+    return function($array) use($class): SingleContainer {
+        $key = \array_rand($array);
+        return $class::create($key);
+    };
+}
+
+function array_rand_value(string $class = null): callable
+{$class = $class ?: Workflow::class;
+    return function($array) use($class): SingleContainer {
+        $key = \array_rand($array);
+        $item = $array[$key];
+        return $class::create($item);
+    };
+}
+
+function array_reduce(callable $callable, $initial = null, string $class = null): callable
 {
     $class = $class ?: Workflow::class;
     return function($array) use($callable, $initial, $class): SingleContainer {

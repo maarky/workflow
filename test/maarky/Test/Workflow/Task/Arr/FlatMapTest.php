@@ -187,4 +187,19 @@ class FlatMapTest extends TestCase
         $actual = Workflow::create($array)->flatMap(FlatMap\last($optionType));
         $this->assertInstanceOf($optionType, $actual);
     }
+
+    public function testRand()
+    {
+        $array = [1,2,3,4];
+        $keys = array_keys($array);
+        $result = Workflow::create($array)->flatMap(FlatMap\array_rand())->get();
+        $this->assertContains($result, $keys);
+    }
+
+    public function testRandValue()
+    {
+        $array = [1,2,3,4];
+        $result = Workflow::create($array)->flatMap(FlatMap\array_rand_value())->get();
+        $this->assertContains($result, $array);
+    }
 }
