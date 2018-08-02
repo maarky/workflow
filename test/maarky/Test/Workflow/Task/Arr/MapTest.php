@@ -335,12 +335,6 @@ class MapTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testHead_notArray()
-    {
-        $actual = Workflow::create(1)->map(Map\head())->isError();
-        $this->assertTrue($actual);
-    }
-
     public function testTail()
     {
         $array = [1,2,3,4,5];
@@ -352,12 +346,6 @@ class MapTest extends TestCase
     public function testTail_notArray()
     {
         $actual = Workflow::create(1)->map(Map\tail())->isError();
-        $this->assertTrue($actual);
-    }
-
-    public function testLast_notArray()
-    {
-        $actual = Workflow::create(1)->map(Map\last())->isError();
         $this->assertTrue($actual);
     }
 

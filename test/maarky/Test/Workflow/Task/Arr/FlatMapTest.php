@@ -142,6 +142,12 @@ class FlatMapTest extends TestCase
         $this->assertInstanceOf(Workflow::class, $workflow);
     }
 
+    public function testHead_notArray()
+    {
+        $actual = Workflow::create(1)->map(FlatMap\head())->isError();
+        $this->assertTrue($actual);
+    }
+
     public function testHead_type_option()
     {
         $array = [1,2,3,4,5];
@@ -165,6 +171,12 @@ class FlatMapTest extends TestCase
     public function testLast_type_workflow($workflow)
     {
         $this->assertInstanceOf(Workflow::class, $workflow);
+    }
+
+    public function testLast_notArray()
+    {
+        $actual = Workflow::create(1)->map(FlatMap\last())->isError();
+        $this->assertTrue($actual);
     }
 
     public function testLast_type_option()
