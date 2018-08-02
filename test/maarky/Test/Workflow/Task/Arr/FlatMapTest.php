@@ -4,27 +4,17 @@ declare(strict_types=1);
 namespace maarky\Test\Workflow\Task\Arr\Map;
 
 use maarky\Option\Option;
-use maarky\Workflow\Task\Arr\FlapMap;
+use maarky\Workflow\Task\Arr\FlatMap;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
-use maarky\Workflow\Task\Utility;
 
 class FlatMapTest extends TestCase
 {
-    protected $tasks;
-
-    public function setUp()
-    {
-        $this->tasks = new class {
-            use FlapMap, Utility;
-        };
-    }
-
     public function testProduct()
     {
         $array = [1,2,3,4,5];
         $expected = array_product($array);
-        $actual = Workflow::create($array)->flatMap($this->tasks->product())->get();
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_product())->get();
         $this->assertSame($expected, $actual);
     }
 
@@ -32,7 +22,7 @@ class FlatMapTest extends TestCase
     {
         $array = [1,2,3,4,5];
         $class = \maarky\Option\Type\Int\Option::class;
-        $actual = Workflow::create($array)->flatMap($this->tasks->product($class));
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_product($class));
         $this->assertInstanceOf($class, $actual);
     }
 
@@ -40,14 +30,14 @@ class FlatMapTest extends TestCase
     {
         $array = [1,2,3,4,'a'];
         $expected = array_product($array);
-        $actual = Workflow::create($array)->flatMap($this->tasks->product())->get();
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_product())->get();
         $this->assertSame($expected, $actual);
     }
 
     public function testProduct_notArray()
     {
         $this->expectException(\TypeError::class);
-        Workflow::create(1)->flatMap($this->tasks->product())->isError();
+        Workflow::create(1)->flatMap(FlatMap\array_product())->isError();
     }
 
     public function testReduce()
@@ -55,7 +45,7 @@ class FlatMapTest extends TestCase
         $array = [1,2,3,4,5];
         $expected = array_sum($array);
         $callable = function ($carry, $item) { return $carry + $item; };
-        $actual = Workflow::create($array)->flatMap($this->tasks->reduce($callable));
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_reduce($callable));
         $this->assertSame($expected, $actual->get());
         return $actual;
     }
@@ -74,7 +64,7 @@ class FlatMapTest extends TestCase
         $initial = 100;
         $expected = array_sum($array) + $initial;
         $callable = function ($carry, $item) { return $carry + $item; };
-        $actual = Workflow::create($array)->flatMap($this->tasks->reduce($callable, $initial))->get();
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_reduce($callable, $initial))->get();
         $this->assertSame($expected, $actual);
     }
 
@@ -83,7 +73,7 @@ class FlatMapTest extends TestCase
         $array = [1,2,3,4,5];
         $initial = 100;
         $callable = function ($carry, $item) { return $carry + $item; };
-        $actual = Workflow::create($array)->flatMap($this->tasks->reduce($callable, $initial, \maarky\Workflow\Type\Int\Workflow::class));
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_reduce($callable, $initial, \maarky\Workflow\Type\Int\Workflow::class));
         $this->assertInstanceOf(\maarky\Workflow\Type\Int\Workflow::class, $actual);
     }
 
@@ -93,7 +83,7 @@ class FlatMapTest extends TestCase
         $initial = 100;
         $callable = function ($carry, $item) { return $carry + $item; };
         $class = Option::class;
-        $actual = Workflow::create($array)->flatMap($this->tasks->reduce($callable, $initial, $class));
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_reduce($callable, $initial, $class));
         $this->assertInstanceOf($class, $actual);
     }
 
@@ -102,7 +92,7 @@ class FlatMapTest extends TestCase
         $array = [1,2,3,4,5];
         $initial = 100;
         $callable = function ($carry, $item) { return 'a'; };
-        $actual = Workflow::create($array)->flatMap($this->tasks->reduce($callable, $initial, \maarky\Workflow\Type\Int\Workflow::class));
+        $actual = Workflow::create($array)->flatMap(FlatMap\array_reduce($callable, $initial, \maarky\Workflow\Type\Int\Workflow::class));
         $this->assertTrue($actual->isEmpty());
         return $actual;
     }
@@ -119,7 +109,7 @@ class FlatMapTest extends TestCase
     {
         $initial = 100;
         $callable = function ($carry, $item) { return $carry + $item; };
-        $actual = Workflow::create([])->flatMap($this->tasks->reduce($callable, $initial))->get();
+        $actual = Workflow::create([])->flatMap(FlatMap\array_reduce($callable, $initial))->get();
         $this->assertSame($initial, $actual);
     }
 
@@ -127,12 +117,62 @@ class FlatMapTest extends TestCase
     {
         $this->expectException(\TypeError::class);
         $callable = function ($carry, $item) { return $carry + $item; };
-        Workflow::create(1)->flatMap($this->tasks->reduce($callable))->isError();
+        Workflow::create(1)->flatMap(FlatMap\array_reduce($callable))->isError();
     }
 
     public function testReduce_notCallable()
     {
         $this->expectException(\TypeError::class);
-        Workflow::create([])->flatMap($this->tasks->reduce(1))->get();
+        Workflow::create([])->flatMap(FlatMap\array_reduce(1))->get();
+    }
+
+    public function testHead()
+    {
+        $array = [1,2,3,4,5];
+        $actual = Workflow::create($array)->flatMap(FlatMap\head());
+        $this->assertSame(1, $actual->get());
+        return $actual;
+    }
+
+    /**
+     * @depends testHead
+     */
+    public function testHead_type_workflow($workflow)
+    {
+        $this->assertInstanceOf(Workflow::class, $workflow);
+    }
+
+    public function testHead_type_option()
+    {
+        $array = [1,2,3,4,5];
+        $optionType = \maarky\Option\Type\Int\Option::class;
+        $actual = Workflow::create($array)->flatMap(FlatMap\head($optionType));
+        $this->assertInstanceOf($optionType, $actual);
+    }
+
+    public function testLast()
+    {
+        $last = 5;
+        $array = [1,2,3,4,$last];
+        $actual = Workflow::create($array)->flatMap(FlatMap\last());
+        $this->assertSame($last, $actual->get());
+        return $actual;
+    }
+
+    /**
+     * @depends testLast
+     */
+    public function testLast_type_workflow($workflow)
+    {
+        $this->assertInstanceOf(Workflow::class, $workflow);
+    }
+
+    public function testLast_type_option()
+    {
+        $last = 5;
+        $array = [1,2,3,4,$last];
+        $optionType = \maarky\Option\Type\Int\Option::class;
+        $actual = Workflow::create($array)->flatMap(FlatMap\last($optionType));
+        $this->assertInstanceOf($optionType, $actual);
     }
 }

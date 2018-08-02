@@ -21,7 +21,9 @@
   "autoload": {
     "psr-4": { "maarky\\Workflow\\": "src/maarky/Workflow" },
     "files": [
-      "src/maarky/Workflow/Task/Arr/Filter.php"
+      "src/maarky/Workflow/Task/Arr/Filter.php",
+      "src/maarky/Workflow/Task/Arr/Map.php",
+      "src/maarky/Workflow/Task/Arr/FlatMap.php"
     ]
   },
   "autoload-dev": {

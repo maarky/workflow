@@ -3,29 +3,19 @@ declare(strict_types=1);
 
 namespace maarky\Test\Workflow\Task\Arr\Map;
 
-use maarky\Workflow\Task\Arr\Map\Udiff;
+use maarky\Workflow\Task\Arr\Map;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
-use maarky\Workflow\Task\Utility;
 
 class UdiffTest extends TestCase
 {
-    protected $tasks;
-
-    public function setUp()
-    {
-        $this->tasks = new class {
-            use Udiff, Utility;
-        };
-    }
-
     public function testAssoc()
     {
         $array1 = ["0.1" => new cr(9), "0.5" => new cr(12), 0 => new cr(23), 1=> new cr(4), 2 => new cr(-15)];
         $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
         $callback = [cr::class, "comp_func_cr"];
         $expected = array_udiff_assoc($array1, $array2, $callback);
-        $actual = Workflow::create($array1)->map($this->tasks->udiffAssoc($callback, $array2))->get();
+        $actual = Workflow::create($array1)->map(Map\array_udiff_assoc($callback, $array2))->get();
         $this->assertSame($expected, $actual);
     }
 
@@ -33,7 +23,7 @@ class UdiffTest extends TestCase
     {
         $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
         $callback = [cr::class, "comp_func_cr"];
-        $actual = Workflow::create(1)->map($this->tasks->udiffAssoc($callback, $array2))->isError();
+        $actual = Workflow::create(1)->map(Map\array_udiff_assoc($callback, $array2))->isError();
         $this->assertTrue($actual);
     }
 
@@ -44,7 +34,7 @@ class UdiffTest extends TestCase
         $valCompare = [cr::class, "comp_func_cr"];
         $keyCompare = [cr::class, "comp_func_key"];
         $expected = array_udiff_uassoc($array1, $array2, $valCompare, $keyCompare);
-        $actual = Workflow::create($array1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->get();
+        $actual = Workflow::create($array1)->map(Map\array_udiff_uassoc($valCompare, $keyCompare, $array2))->get();
         $this->assertSame($expected, $actual);
     }
 
@@ -53,7 +43,7 @@ class UdiffTest extends TestCase
         $array2 = ["0.2" => new cr(9), "0.5" => new cr(22), 0 => new cr(3), 1=> new cr(4), 2 => new cr(-15)];
         $valCompare = [cr::class, "comp_func_cr"];
         $keyCompare = [cr::class, "comp_func_key"];
-        $actual = Workflow::create(1)->map($this->tasks->udiffUassoc($valCompare, $keyCompare, $array2))->isError();
+        $actual = Workflow::create(1)->map(Map\array_udiff_uassoc($valCompare, $keyCompare, $array2))->isError();
         $this->assertTrue($actual);
     }
 
@@ -73,7 +63,7 @@ class UdiffTest extends TestCase
             return $areaA <=> $areaB;
         };
         $expected = array_udiff($array1, $array2, $compare);
-        $actual = Workflow::create($array1)->map($this->tasks->udiff($compare, $array2))->get();
+        $actual = Workflow::create($array1)->map(Map\array_udiff($compare, $array2))->get();
         $this->assertSame($expected, $actual);
         return [$compare, $array2];
     }
@@ -83,7 +73,7 @@ class UdiffTest extends TestCase
      */
     public function testUdiff_notArray($data)
     {
-        $actual = Workflow::create(1)->map($this->tasks->udiff($data[0], $data[1]))->isError();
+        $actual = Workflow::create(1)->map(Map\array_udiff($data[0], $data[1]))->isError();
         $this->assertTrue($actual);
     }
 }

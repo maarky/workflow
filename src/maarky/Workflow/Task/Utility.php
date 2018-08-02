@@ -5,9 +5,9 @@ namespace maarky\Workflow\Task;
 
 use maarky\Monad\SingleContainer;
 
-trait Utility
+class Utility
 {
-    public function bind(callable $callable, array $args = []): callable
+    static public function bind(callable $callable, array $args = []): callable
     {
         return function($value) use($callable, $args) {
             if(array_key_exists('?', $args)) {
@@ -19,11 +19,11 @@ trait Utility
         };
     }
 
-    public function bindFlatmap(string $class, callable $callable, array $args = []): callable
+    static public function bindFlatmap(string $class, callable $callable, array $args = []): callable
     {
         return function($value) use($class, $callable, $args): SingleContainer {
             try {
-                $callable = $this->bind($callable, $args);
+                $callable = static::bind($callable, $args);
                 $result = $callable($value);
             } catch (\Throwable $t) {
                 $result = $t;
@@ -32,49 +32,72 @@ trait Utility
         };
     }
 
-    protected function doCallback(callable $callback, callable $isDefined)
+    static public function doCallback(callable $callback, $input, callable $isDefined)
     {
-        $result = $callback();
+        $result = $callback($input);
         return $isDefined($result) ? $result : null;
     }
 
-    protected function doArrayCallback(callable $callback)
+    static public function doArrayCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, 'is_array');
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_array');
+        };
     }
 
-    protected function doIntCallback(callable $callback)
+    static public function doIntCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, 'is_int');
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_int');
+        };
     }
 
-    protected function doNumericCallback(callable $callback)
+    static public function doNumericCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, 'is_numeric');
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_numeric');
+        };
     }
 
-    protected function doFloatCallback(callable $callback)
+    static public function doFloatCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, 'is_float');
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_float');
+        };
     }
 
-    protected function doStringCallback(callable $callback)
+    static public function doStringCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, 'is_string');
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_string');
+        };
     }
 
-    protected function doTrueCallback(callable $callback)
+    static public function doTrueCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, function ($val) { return true === $val; });
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, function ($val) { return true === $val; });
+        };
     }
 
-    protected function doAnyCallback(callable $callback)
+    static public function doAnyCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, function () { return true; });
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, function () { return true; });
+        };
     }
 
-    protected function doNotnullCallback(callable $callback)
+    static public function doNotnullCallback(callable $callback): callable
     {
-        return $this->doCallback($callback, function ($val) { return !is_null($val); });
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, function ($val) { return !is_null($val); });
+        };
+    }
+
+    static public function doBooleanCallback(callable $callback): callable
+    {
+        return function ($input) use($callback) {
+            return static::doCallback($callback, $input, 'is_bool');
+        };
     }
 }
