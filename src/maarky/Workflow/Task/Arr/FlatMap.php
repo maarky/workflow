@@ -102,3 +102,13 @@ function count()
         return IntWorkflow::create($count);
     };
 }
+
+function implode(string $glue, string $class = null)
+{
+    $class = $class ?: StringWorkflow::class;
+    return function ($array) use ($glue, $class)
+    {
+        $result = \implode($glue, $array);
+        return $class::create($result);
+    };
+}

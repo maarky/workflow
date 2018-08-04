@@ -229,4 +229,32 @@ class FlatMapTest extends TestCase
         $actual = Workflow::create($array)->flatMap(FlatMap\count())->get();
         $this->assertEquals($expected, $actual);
     }
+
+    public function testImplode()
+    {
+        $array = [1,2,3];
+        $glue = ',';
+        $epected = implode($glue, $array);
+        $actual = Workflow::create($array)->flatMap(FlatMap\implode($glue))->get();
+        $this->assertEquals($epected, $actual);
+    }
+
+    public function testImplode_class()
+    {
+        $array = [1,2,3];
+        $glue = ',';
+        $expected = implode($glue, $array);
+        $class = Workflow::class;
+        $actual = Workflow::create($array)->flatMap(FlatMap\implode($glue, $class));
+        $this->assertEquals($expected, $actual->get());
+        return [$actual, $class];
+    }
+
+    /**
+     * @depends testImplode_class
+     */
+    public function testImplode_class_type($input)
+    {
+        $this->assertInstanceOf($input[1], $input[0]);
+    }
 }
