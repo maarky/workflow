@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace maarky\Test\Workflow\Task\Arr\Map;
+namespace maarky\Test\Workflow\Task\Arr;
 
-use maarky\Workflow\Task\Utility;
 use maarky\Workflow\Task\Arr\Map;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 class MapTest extends TestCase
 {
     protected $errorReporting;
-    protected $tasks;
 
     public function setUp()
     {
@@ -126,6 +124,24 @@ class MapTest extends TestCase
         $column = 'a';
         $actual = Workflow::create($array)->map(Map\array_column($column))->isError();
         $this->assertTrue($actual);
+    }
+
+    public function testCombineValues()
+    {
+        $keys = ['a', 'b', 'c'];
+        $values = [1, 2, 3];
+        $expected = array_combine($keys, $values);
+        $actual = Workflow::create($keys)->map(Map\array_combine_values($values))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testCombineKeys()
+    {
+        $keys = ['a', 'b', 'c'];
+        $values = [1, 2, 3];
+        $expected = array_combine($keys, $values);
+        $actual = Workflow::create($values)->map(Map\array_combine_keys($keys))->get();
+        $this->assertEquals($expected, $actual);
     }
 
     public function testCountValues()
@@ -349,16 +365,18 @@ class MapTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testInit()
+    public function testPop()
     {
         $array = [1,2,3,4,5];
-        $actual = Workflow::create($array)->map(Map\init())->get();
-        $this->assertSame([1,2,3,4], $actual);
+        $expected = $array;
+        array_pop($expected);
+        $actual = Workflow::create($array)->map(Map\array_pop())->get();
+        $this->assertEquals($expected, $actual);
     }
 
-    public function testInit_notArray()
+    public function testPop_notArray()
     {
-        $actual = Workflow::create(1)->map(Map\init())->isError();
+        $actual = Workflow::create(1)->map(Map\array_pop())->isError();
         $this->assertTrue($actual);
     }
 
@@ -433,13 +451,6 @@ class MapTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testReplace_notArrayReplacement()
-    {
-        $array1 = array("orange", "banana", "apple", "raspberry");
-        $actual = Workflow::create($array1)->map(Map\array_replace(1))->isError();
-        $this->assertTrue($actual);
-    }
-
     public function testReplaceRecursive()
     {
         $array1 = array('citrus' => array( "orange") , 'berries' => array("blackberry", "raspberry"), );
@@ -456,10 +467,150 @@ class MapTest extends TestCase
         $this->assertTrue($actual);
     }
 
-    public function testReplaceRecursive_notArrayReplacement()
+    public function testShift()
     {
-        $array1 = array('citrus' => array( "orange") , 'berries' => array("blackberry", "raspberry"), );
-        $actual = Workflow::create($array1)->map(Map\array_replace_recursive(1))->isError();
-        $this->assertTrue($actual);
+        $array = [1,2,3];
+        $expected = $array;
+        \array_shift($expected);
+        $actual = Workflow::create($array)->map(Map\array_shift())->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSlice()
+    {
+        $array = [1,2,3,4,5];
+        $offset = 2;
+        $expected = array_slice($array, $offset);
+        $actual = Workflow::create($array)->map(Map\array_slice($offset))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSlice_length()
+    {
+        $array = [1,2,3,4,5];
+        $offset = 2;
+        $length = 2;
+        $expected = array_slice($array, $offset, $length);
+        $actual = Workflow::create($array)->map(Map\array_slice($offset, $length))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testSlice_preserveKeys()
+    {
+        $array = [1,2,3,4,5];
+        $offset = 2;
+        $preserveKeys = true;
+        $expected = array_slice($array, $offset, null, $preserveKeys);
+        $actual = Workflow::create($array)->map(Map\array_slice($offset, null, $preserveKeys))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUnique()
+    {
+        $array = [1,2,3,'3a',4,5,5,6];
+        $expected = array_unique($array);
+        $actual = Workflow::create($array)->map(Map\array_unique())->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUnique_sortFlag()
+    {
+        $array = [1,2,3,'3a',4,5,5,6];
+        $sort = SORT_REGULAR;
+        $expected = array_unique($array, $sort);
+        $actual = Workflow::create($array)->map(Map\array_unique($sort))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUnshift()
+    {
+        $array = [1,2,3,4,5];
+        $unshift = 9;
+        $expected = $array;
+        array_unshift($expected, $unshift);
+        $actual = Workflow::create($array)->map(Map\array_unshift($unshift))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testUnshift_multiple()
+    {
+        $array = [1,2,3,4,5];
+        $unshift = [9,10];
+        $expected = $array;
+        array_unshift($expected, ...$unshift);
+        $actual = Workflow::create($array)->map(Map\array_unshift(...$unshift))->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testValues()
+    {
+        $array = [1 => 'q','w','e','r','t','y'];
+        $expected = array_values($array);
+        $actual = Workflow::create($array)->map(Map\array_values())->get();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testWalkRecursive()
+    {
+        $array = [1,2,3,4,5, [6,7,8,9,0]];
+        $callback = function (&$input) {
+            $input *= 2;
+        };
+        $expected = $array;
+        array_walk_recursive($expected, $callback);
+        $workflow = Workflow::create($array);
+        $actual = $workflow->map(Map\array_walk_recursive($callback))->get();
+        $this->assertEquals($expected, $actual);
+        return [$workflow, $array];
+    }
+
+    /**
+     * @depends testWalkRecursive
+     */
+    public function testWalkRecursive_arrayUnchanged($input)
+    {
+        $this->assertEquals($input[1], $input[0]->get());
+    }
+
+    public function testWalk()
+    {
+        $array = [1,2,3,4,5];
+        $callback = function (&$input) {
+            $input *= 2;
+        };
+        $expected = $array;
+        array_walk_recursive($expected, $callback);
+        $workflow = Workflow::create($array);
+        $actual = $workflow->map(Map\array_walk($callback))->get();
+        $this->assertEquals($expected, $actual);
+        return [$workflow, $array];
+    }
+
+    /**
+     * @depends testWalk
+     */
+    public function testWalk_arrayUnchanged($input)
+    {
+        $this->assertEquals($input[1], $input[0]->get());
+    }
+
+    public function testWalk_ArgumentCountError()
+    {
+        $array = [1,2,3,4,5];
+        $callback = function ($input, $b, $c, $d) {
+            //do nothing
+        };
+        $workflow = Workflow::create($array);
+        $actual = $workflow->map(Map\array_walk($callback));
+        $this->assertTrue($actual->isError());
+        return $actual;
+    }
+
+    /**
+     * @depends testWalk_ArgumentCountError
+     */
+    public function testWalk_ArgumentCountError_type(Workflow $actual)
+    {
+        $this->assertInstanceOf(\ArgumentCountError::class, $actual->getError()->get());
     }
 }

@@ -5,48 +5,6 @@ namespace maarky\Workflow\Task\Arr\Map;
 
 use maarky\Workflow\Task\Utility;
 
-function array_diff(array ...$arrays): callable
-{
-    $callback = function ($array) use($arrays): array {
-        return \array_diff($array, ...$arrays);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
-function array_diff_assoc(array ...$arrays): callable
-{
-    $callback = function ($array) use($arrays) {
-        return \array_diff_assoc($array, ...$arrays);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
-function array_diff_key(array ...$arrays): callable
-{
-    $callback = function ($array) use($arrays) {
-        return \array_diff_key($array, ...$arrays);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
-function array_diff_uassoc(callable $callback, array ...$arrays): callable
-{
-    $arrays[] = $callback;
-    $callback = function ($array) use($arrays) {
-        return \array_diff_uassoc($array, ...$arrays);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
-function array_diff_ukey(callable $callback, array ...$arrays): callable
-{
-    $arrays[] = $callback;
-    $callback = function ($array) use($arrays) {
-        return \array_diff_ukey($array, ...$arrays);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
 function array_change_key_case(int $case = CASE_LOWER): callable
 {
     $callback = function ($array) use($case) {
@@ -71,10 +29,34 @@ function array_column($columnKey, $indexKey = null): callable
     return Utility::doArrayCallback($callback);
 }
 
+function array_combine_values(array $values): callable
+{
+    $callback = function ($array) use ($values) {
+        return \array_combine($array, $values);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_combine_keys(array $keys): callable
+{
+    $callback = function ($array) use ($keys) {
+        return \array_combine($keys, $array);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
 function array_count_values(): callable
 {
     $callback = function($array) {
         return \array_count_values($array);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_fill_keys($value): callable
+{
+    $callback = function($array) use($value) {
+        return \array_fill_keys($array, $value);
     };
     return Utility::doArrayCallback($callback);
 }
@@ -91,14 +73,6 @@ function array_flip(): callable
 {
     $callback = function($array) {
         return \array_flip($array);
-    };
-    return Utility::doArrayCallback($callback);
-}
-
-function array_fill_keys($value): callable
-{
-    $callback = function($array) use($value) {
-        return \array_fill_keys($array, $value);
     };
     return Utility::doArrayCallback($callback);
 }
@@ -154,13 +128,11 @@ function tail(): callable
     return Utility::doArrayCallback($callback);
 }
 
-/**
- * Get array with last item removed
- */
-function init(): callable
+function array_pop(): callable
 {
     $callback = function($array) {
-        return array_slice($array, 0, -1, true);
+        \array_pop($array);
+        return $array;
     };
     return Utility::doArrayCallback($callback);
 }
@@ -174,7 +146,7 @@ function array_push($value): callable
     return Utility::doArrayCallback($callback);
 }
 
-function array_rand($num = 1): callable
+function array_rand(int $num = 1): callable
 {
     $callback = function($array) use($num) {
         return (array) \array_rand($array, $num);
@@ -182,7 +154,7 @@ function array_rand($num = 1): callable
     return Utility::doArrayCallback($callback);
 }
 
-function array_rand_values($num = 1): callable
+function array_rand_values(int $num = 1): callable
 {
     $callback = function($array) use($num) {
         $result = (array) \array_rand($array, $num);
@@ -193,7 +165,7 @@ function array_rand_values($num = 1): callable
     return Utility::doArrayCallback($callback);
 }
 
-function array_replace(...$arrays): callable
+function array_replace(array ...$arrays): callable
 {
     $callback = function($array) use($arrays) {
         return \array_replace($array, ...$arrays);
@@ -201,7 +173,7 @@ function array_replace(...$arrays): callable
     return Utility::doArrayCallback($callback);
 }
 
-function array_replace_recursive(...$arrays): callable
+function array_replace_recursive(array ...$arrays): callable
 {
     $callback = function($array) use($arrays) {
         return \array_replace_recursive($array, ...$arrays);
@@ -209,7 +181,108 @@ function array_replace_recursive(...$arrays): callable
     return Utility::doArrayCallback($callback);
 }
 
-function array_intersect(array ...$arrays)
+function array_shift(): callable
+{
+    return function($array) {
+        \array_shift($array);
+        return $array;
+    };
+}
+
+function array_slice(int $offset, int $length = null, bool $preserveKeys = false): callable
+{
+    $callback = function ($array) use($offset, $length, $preserveKeys) {
+        return \array_slice($array, $offset, $length, $preserveKeys);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_unique(int $sortFlags = SORT_STRING)
+{
+    $callback = function ($array) use($sortFlags) {
+        return \array_unique($array, $sortFlags);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_unshift(...$values)
+{
+    $callback = function ($array) use($values) {
+        \array_unshift($array, ...$values);
+        return $array;
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_values()
+{
+    $callback = function ($array) {
+        return \array_values($array);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_walk(callable $callback, $userdata = null)
+{
+    $callback = function ($array) use($callback, $userdata) {
+        \array_walk($array, $callback, $userdata);
+        return $array;
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_walk_recursive(callable $callback, $userdata = null)
+{
+    $callback = function ($array) use($callback, $userdata) {
+        \array_walk_recursive($array, $callback, $userdata);
+        return $array;
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_diff(array ...$arrays): callable
+{
+    $callback = function ($array) use($arrays): array {
+        return \array_diff($array, ...$arrays);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_diff_assoc(array ...$arrays): callable
+{
+    $callback = function ($array) use($arrays) {
+        return \array_diff_assoc($array, ...$arrays);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_diff_key(array ...$arrays): callable
+{
+    $callback = function ($array) use($arrays) {
+        return \array_diff_key($array, ...$arrays);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_diff_uassoc(callable $callback, array ...$arrays): callable
+{
+    $arrays[] = $callback;
+    $callback = function ($array) use($arrays) {
+        return \array_diff_uassoc($array, ...$arrays);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_diff_ukey(callable $callback, array ...$arrays): callable
+{
+    $arrays[] = $callback;
+    $callback = function ($array) use($arrays) {
+        return \array_diff_ukey($array, ...$arrays);
+    };
+    return Utility::doArrayCallback($callback);
+}
+
+function array_intersect(array ...$arrays): callable
 {
     $callback = function ($array) use($arrays) {
         return \array_intersect($array, ...$arrays);
@@ -217,7 +290,7 @@ function array_intersect(array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_intersect_assoc(array ...$arrays)
+function array_intersect_assoc(array ...$arrays): callable
 {
     $callback = function ($array) use($arrays) {
         return \array_intersect_assoc($array, ...$arrays);
@@ -225,7 +298,7 @@ function array_intersect_assoc(array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_intersect_key(array ...$arrays)
+function array_intersect_key(array ...$arrays): callable
 {
     $callback = function ($array) use($arrays) {
         return \array_intersect_key($array, ...$arrays);
@@ -233,7 +306,7 @@ function array_intersect_key(array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_intersect_uassoc(callable $callback, array ...$arrays)
+function array_intersect_uassoc(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -242,7 +315,7 @@ function array_intersect_uassoc(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_intersect_ukey(callable $callback, array ...$arrays)
+function array_intersect_ukey(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -251,7 +324,7 @@ function array_intersect_ukey(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_udiff(callable $callback, array ...$arrays)
+function array_udiff(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -260,7 +333,7 @@ function array_udiff(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_udiff_assoc(callable $callback, array ...$arrays)
+function array_udiff_assoc(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -269,7 +342,7 @@ function array_udiff_assoc(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_udiff_uassoc($valCompare, $keyCompare, array ...$arrays)
+function array_udiff_uassoc($valCompare, $keyCompare, array ...$arrays): callable
 {
     $arrays[] = $valCompare;
     $arrays[] = $keyCompare;
@@ -279,7 +352,7 @@ function array_udiff_uassoc($valCompare, $keyCompare, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_uintersect(callable $callback, array ...$arrays)
+function array_uintersect(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -288,7 +361,7 @@ function array_uintersect(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_uintersect_assoc(callable $callback, array ...$arrays)
+function array_uintersect_assoc(callable $callback, array ...$arrays): callable
 {
     $arrays[] = $callback;
     $callback = function ($array) use($arrays) {
@@ -297,7 +370,7 @@ function array_uintersect_assoc(callable $callback, array ...$arrays)
     return Utility::doArrayCallback($callback);
 }
 
-function array_uintersect_uassoc($valCompare, $keyCompare, array ...$arrays)
+function array_uintersect_uassoc($valCompare, $keyCompare, array ...$arrays): callable
 {
     $arrays[] = $valCompare;
     $arrays[] = $keyCompare;
