@@ -24,7 +24,9 @@
       "src/maarky/Workflow/Task/Arr/Filter.php",
       "src/maarky/Workflow/Task/Arr/Map.php",
       "src/maarky/Workflow/Task/Arr/FlatMap.php",
-      "src/maarky/Workflow/Task/Arr/Map/Sort.php"
+      "src/maarky/Workflow/Task/Arr/Map/Sort.php",
+      "src/maarky/Workflow/Task/String/Map.php",
+      "src/maarky/Workflow/Task/String/FlatMap.php"
     ]
   },
   "autoload-dev": {

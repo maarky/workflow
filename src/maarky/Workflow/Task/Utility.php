@@ -100,4 +100,14 @@ class Utility
             return static::doCallback($callback, $input, 'is_bool');
         };
     }
+
+    static public function getEncoding(string $default, $encoding = null)
+    {
+        return is_string($encoding) ? $encoding : $default;
+    }
+
+    static public function getFlags(int $default, $flags = null)
+    {
+        return is_null($flags) ? $default : $flags;
+    }
 }

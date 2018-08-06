@@ -8,7 +8,6 @@ use maarky\Workflow\Type\Numeric\Workflow as NumericWorkflow;
 use maarky\Workflow\Type\String\Workflow as StringWorkflow;
 use maarky\Workflow\Type\Int\Workflow as IntWorkflow;
 use maarky\Workflow\Workflow;
-use maarky\Workflow\Task\Utility;
 
 function array_pop(string $class = null)
 {
