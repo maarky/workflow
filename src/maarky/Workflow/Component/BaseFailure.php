@@ -71,6 +71,9 @@ trait BaseFailure
      */
     public function orElse(SingleContainer $else): SingleContainer
     {
+        if($else instanceof  Workflow) {
+            $else->parent = $this;
+        }
         return $else;
     }
 
