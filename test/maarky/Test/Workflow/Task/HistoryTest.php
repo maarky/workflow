@@ -49,14 +49,15 @@ class HistoryTest extends TestCase
         $this->history->bookmark('test', Workflow::create('a'));
         $result = $this->history->get('test');
         $this->assertInstanceOf(Option::class, $result);
+        return $result;
     }
 
-    public function testGet_optionHasValue()
+    /**
+     * @depends testGet_option
+     */
+    public function testGet_optionHasValue($result)
     {
-        $workflow = Workflow::create('a');
-        $this->history->bookmark('test', $workflow);
-        $result = $this->history->get('test')->get();
-        $this->assertSame($workflow, $result);
+        $this->assertTrue($result->isDefined());
     }
 
     public function testGet_optionHasNoValue()
