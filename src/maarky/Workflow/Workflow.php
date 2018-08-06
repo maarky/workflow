@@ -8,6 +8,11 @@ use maarky\Option\Option;
 
 abstract class Workflow implements SingleContainer
 {
+    /**
+     * @var Workflow
+     */
+    protected $parent;
+
     final public static function create($value = null): Workflow
     {
         if(static::isErrorResult($value)) {
@@ -52,6 +57,11 @@ abstract class Workflow implements SingleContainer
     public function equals($value): bool
     {
         return $value instanceof SingleContainer && get_class($this) === get_class($value);
+    }
+
+    public function getParent()
+    {
+        return \maarky\Workflow\Option\Option::create($this->parent);
     }
 
     abstract public function isError(): bool;

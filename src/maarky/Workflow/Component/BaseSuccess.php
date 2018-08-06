@@ -52,6 +52,9 @@ trait BaseSuccess
      */
     public function orElse(SingleContainer $else): SingleContainer
     {
+        if($else instanceof  Workflow) {
+            $else->parent = $this;
+        }
         return $this->isDefined() ? $this : $else;
     }
 
@@ -61,7 +64,14 @@ trait BaseSuccess
      */
     public function orCall(callable $call): SingleContainer
     {
-        return $this->isDefined() ? $this : $call();
+        if($this->isDefined()) {
+            return $this;
+        }
+        $else = $call();
+        if($else instanceof  Workflow) {
+            $else->parent = $this;
+        }
+        return $else;
     }
 
     /**
@@ -90,11 +100,13 @@ trait BaseSuccess
             if($this->value->filter($filter)->isDefined()) {
                 return $this;
             }
-            return static::create(null);
+            $value = null;
         } catch (\Throwable $t) {
-            return static::create($t);
+            $value = $t;
         }
-
+        $workflow = static::create($value);
+        $workflow->parent = $this;
+        return $workflow;
     }
 
     /**
@@ -107,10 +119,13 @@ trait BaseSuccess
             if($this->value->filterNot($filter)->isDefined()) {
                 return $this;
             }
-            return static::create(null);
+            $value = null;
         } catch (\Throwable $t) {
-            return static::create($t);
+            $value = $t;
         }
+        $workflow = static::create($value);
+        $workflow->parent = $this;
+        return $workflow;
     }
 
     /**
@@ -126,7 +141,9 @@ trait BaseSuccess
             $result = $t;
         }
 
-        return static::create($result);
+        $workflow = static::create($result);
+        $workflow->parent = $this;
+        return $workflow;
     }
 
     /**
@@ -137,7 +154,9 @@ trait BaseSuccess
     public function flatMap(callable $flatMap): SingleContainer
     {
         if($this->isDefined()) {
-            return $this->value->flatMap($flatMap);
+            $workflow = $this->value->flatMap($flatMap);
+            $workflow->parent = $this;
+            return $workflow;
         }
         return $this;
     }
