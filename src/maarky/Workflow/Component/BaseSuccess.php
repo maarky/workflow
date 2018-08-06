@@ -52,10 +52,12 @@ trait BaseSuccess
      */
     public function orElse(SingleContainer $else): SingleContainer
     {
-        if($else instanceof  Workflow) {
+        if($this->isDefined()) {
+            return $this;
+        } elseif($else instanceof  Workflow) {
             $else->parent = $this;
         }
-        return $this->isDefined() ? $this : $else;
+        return $else;
     }
 
     /**
