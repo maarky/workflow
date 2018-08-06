@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace maarky\Workflow\Type\PHP\Classes\SplPriorityQueue;
 
-abstract class Workflow extends \maarky\Workflow\Type\PHP\Classes\SplHeap\Workflow
+abstract class Workflow extends \maarky\Workflow\Type\Object\Workflow
 {
     public static function isValid($value): bool
     {

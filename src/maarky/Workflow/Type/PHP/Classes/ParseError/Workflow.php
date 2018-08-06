@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace maarky\Workflow\Type\PHP\Classes\ParseError;
 
-abstract class Workflow extends \maarky\Workflow\Type\PHP\Classes\ArithmeticError\Workflow
+abstract class Workflow extends \maarky\Workflow\Type\PHP\Classes\Error\Workflow
 {
     public static function isValid($value): bool
     {
