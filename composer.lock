@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "maarky/option",
-            "version": "3.0.3",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maarky/option.git",
-                "reference": "ad64861c19c09827270c5db5fad19a6a1f9e41a8"
+                "reference": "3c35f23915ebf24399d5428e96a3ab7d1433c597"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maarky/option/zipball/ad64861c19c09827270c5db5fad19a6a1f9e41a8",
-                "reference": "ad64861c19c09827270c5db5fad19a6a1f9e41a8",
+                "url": "https://api.github.com/repos/maarky/option/zipball/3c35f23915ebf24399d5428e96a3ab7d1433c597",
+                "reference": "3c35f23915ebf24399d5428e96a3ab7d1433c597",
                 "shasum": ""
             },
             "require": {
@@ -34,7 +34,10 @@
             "autoload": {
                 "psr-4": {
                     "maarky\\": "src/maarky/"
-                }
+                },
+                "classmap": [
+                    "src/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -53,7 +56,7 @@
                 "php",
                 "type"
             ],
-            "time": "2018-08-06T00:39:42+00:00"
+            "time": "2018-08-13T01:11:31+00:00"
         },
         {
             "name": "maarky/singlecontainer",
@@ -767,16 +770,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.0",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0b6b29faf95c03fd7867e866438b78d5692b6f03"
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0b6b29faf95c03fd7867e866438b78d5692b6f03",
-                "reference": "0b6b29faf95c03fd7867e866438b78d5692b6f03",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
                 "shasum": ""
             },
             "require": {
@@ -847,7 +850,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-03T06:02:45+00:00"
+            "time": "2018-08-07T06:44:28+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
