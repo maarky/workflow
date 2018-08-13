@@ -6,7 +6,6 @@ namespace maarky\Test\Workflow;
 use maarky\Workflow\Component\BaseSuccess;
 use maarky\Workflow\Error;
 use maarky\Workflow\Failure;
-use maarky\Workflow\NoResult;
 use maarky\Workflow\Success;
 use maarky\Workflow\Workflow;
 use PHPUnit\Framework\TestCase;
@@ -285,5 +284,23 @@ class SuccessTest extends TestCase
     public function testGetError()
     {
         $this->assertFalse(Workflow::create(1)->getError()->isDefined());
+    }
+
+    public function testGetParent_none()
+    {
+        $this->assertTrue(Workflow::create(1)->getParent()->isEmpty());
+    }
+
+    public function testGetParent_some()
+    {
+        $workflow = Workflow::create('a');
+        $this->assertTrue($workflow->map('trim')->getParent()->isDefined());
+    }
+
+    public function testGetParent_some_correctValue()
+    {
+        $workflow = Workflow::create('a');
+        $parent = $workflow->map('trim')->getParent();
+        $this->assertSame($workflow, $parent->get());
     }
 }
