@@ -290,17 +290,4 @@ class SuccessTest extends TestCase
     {
         $this->assertTrue(Workflow::create(1)->getParent()->isEmpty());
     }
-
-    public function testGetParent_some()
-    {
-        $workflow = Workflow::create('a');
-        $this->assertTrue($workflow->map('trim')->getParent()->isDefined());
-    }
-
-    public function testGetParent_some_correctValue()
-    {
-        $workflow = Workflow::create('a');
-        $parent = $workflow->map('trim')->getParent();
-        $this->assertSame($workflow, $parent->get());
-    }
 }

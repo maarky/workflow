@@ -54,8 +54,6 @@ trait BaseSuccess
     {
         if($this->isDefined()) {
             return $this;
-        } elseif($else instanceof  Workflow) {
-            $else->parent = $this;
         }
         return $else;
     }
@@ -70,9 +68,6 @@ trait BaseSuccess
             return $this;
         }
         $else = $call();
-        if($else instanceof  Workflow) {
-            $else->parent = $this;
-        }
         return $else;
     }
 
@@ -107,7 +102,6 @@ trait BaseSuccess
             $value = $t;
         }
         $workflow = static::create($value);
-        $workflow->parent = $this;
         return $workflow;
     }
 
@@ -126,7 +120,6 @@ trait BaseSuccess
             $value = $t;
         }
         $workflow = static::create($value);
-        $workflow->parent = $this;
         return $workflow;
     }
 
@@ -144,7 +137,6 @@ trait BaseSuccess
         }
 
         $workflow = static::create($result);
-        $workflow->parent = $this;
         return $workflow;
     }
 
@@ -155,12 +147,10 @@ trait BaseSuccess
      */
     public function flatMap(callable $flatMap): SingleContainer
     {
-        if($this->isDefined()) {
-            $workflow = $this->value->flatMap($flatMap);
-            $workflow->parent = $this;
-            return $workflow;
+        if($this->isEmpty()) {
+            return $this;
         }
-        return $this;
+        return $this->value->flatMap($flatMap);
     }
 
     /**

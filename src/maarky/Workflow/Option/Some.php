@@ -9,9 +9,4 @@ use maarky\Workflow\Workflow;
 class Some extends Option
 {
     use BaseSome;
-
-    public function get(): Workflow
-    {
-        return $this->value;
-    }
 }
